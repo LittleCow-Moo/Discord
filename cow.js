@@ -34,7 +34,7 @@ s4d.client = new s4d.Discord.Client({
     fetchAllMembers: true,
     ws: { properties: { $browser: "Discord iOS" }}
      });
-s4d.webhook = new s4d.Discord.WebhookClient('925380826324168714','2e8xY85HPE_zeayKrtCWZiquH3yA2onbYECcQphtQnTRvyYczw5EDPw8e89OZG4mJQfN')
+s4d.webhook = new s4d.Discord.WebhookClient('Re','moved')
 /*s4d.together = new DiscordTogether(s4d.client)*/
 s4d.client.on('raw', async (packet) => {
     if (['MESSAGE_REACTION_ADD', 'MESSAGE_REACTION_REMOVE'].includes(packet.t)) {
