@@ -597,30 +597,3 @@ api.use(req=>{
 })
 api.listen({Port})
 //#endregion
-
-//#region 按鈕處理程式
-client.on('clickButton',async click => {
-        console.log(click.reply.send)
-        console.log('ayo')
-        switch(click.id){
-            case 'rolemc':
-            if (click.clicker.member.roles.cache.has('956545652211478538')){
-            click.clicker.member.roles.remove('956545652211478538')
-            click.reply.send('哞!已移除Minecraft區的權限!',{ephemeral:true})
-        }else{
-            click.clicker.member.roles.add('956545652211478538')
-            click.reply.send('哞!已添加Minecraft區的權限!',{ephemeral:true})
-        }
-        break;
-        case 'rolecow':
-        if (click.clicker.member.roles.cache.has('957031886125957120')){
-            click.clicker.member.roles.remove('957031886125957120')
-            click.reply.send('哞!已移除牛牛區的權限!',{ephemeral:true})
-        }else{
-            click.clicker.member.roles.add('957031886125957120')
-            click.reply.send('哞!已添加牛牛區的權限!',{ephemeral:true})
-        }
-        break;
-    }
-    })
-//#endregion
