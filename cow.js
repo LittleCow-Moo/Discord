@@ -1,7 +1,13 @@
+//#region 最初始的設定
 const request = require('request');
 let Discord;
 let moment;
 let suggContent4creThread
+const koa = require('koa')
+const api = new koa()
+const os = require('os-utils')
+const so = require('os')
+var alphlist = ['🇦','🇧','🇨','🇩','🇪','🇫','🇬','🇭','🇮','🇯','🇰','🇱','🇲','🇳','🇴','🇵','🇶','🇷','🇸','🇹','🇺','🇻','🇼','🇽','🇾','🇿']
 if (typeof window !== "undefined") {
     Discord = DiscordJS;
         moment = Momentl;
@@ -15,38 +21,39 @@ const {
     MessageMenu,
     MessageMenuOption
 } = require("discord-buttons")
+const disbut = require('discord-buttons')
 
 const delay = (ms) => new Promise((resolve) => setTimeout(() => resolve(), ms));
-const s4d = {
-    Discord,
-    client: null,
-    webhook: null,
-    together: null,
-    tokenInvalid: false,
+const mgr = {
     reply: null,
     joiningMember: null,
     checkMessageExists() {
-        if (!s4d.client) throw new Error('You cannot perform message operations without a Discord.js client')
-        if (!s4d.client.readyTimestamp) throw new Error('You cannot perform message operations while the bot is not connected to the Discord API')
+        if (!client) throw new Error('You cannot perform message operations without a Discord.js client')
+        if (!client.readyTimestamp) throw new Error('You cannot perform message operations while the bot is not connected to the Discord API')
     }
 };
-s4d.client = new s4d.Discord.Client({
+const client = new Discord.Client({
     fetchAllMembers: true,
     ws: { properties: { $browser: "Discord iOS" }}
      });
-s4d.webhook = new s4d.Discord.WebhookClient('Re','moved')
-/*s4d.together = new DiscordTogether(s4d.client)*/
-s4d.client.on('raw', async (packet) => {
+disbut(client)
+
+var cpu
+os.cpuUsage((v) => {cpu = v});
+setInterval(()=>{os.cpuUsage((v) => {cpu = v});},1000)
+
+const webhook = new Discord.WebhookClient('{Webhook ID}', '{Webhook Token}');
+client.on('raw', async (packet) => {
     if (['MESSAGE_REACTION_ADD', 'MESSAGE_REACTION_REMOVE'].includes(packet.t)) {
-        const guild = s4d.client.guilds.cache.get(packet.d.guild_id);
+        const guild = client.guilds.cache.get(packet.d.guild_id);
         if (!guild) return;
         const member = guild.members.cache.get(packet.d.user_id) || guild.members.fetch(d.user_id).catch(() => {});
         if (!member) return;
-        const channel = s4d.client.channels.cache.get(packet.d.channel_id);
+        const channel = client.channels.cache.get(packet.d.channel_id);
         if (!channel) return;
         const message = channel.messages.cache.get(packet.d.message_id) || await channel.messages.fetch(packet.d.message_id).catch(() => {});
         if (!message) return;
-        s4d.client.emit(packet.t, guild, channel, message, member, packet.d.emoji.name);
+        client.emit(packet.t, guild, channel, message, member, packet.d.emoji.name);
     }
 });
 var _E7_AC_91_E8_A9_B1_E5_BA_AB, coinnum, cointext, color;
@@ -62,253 +69,253 @@ function mathRandomInt(a, b) {
 }
 
 
-s4d.client.login('Removed').catch((e) => {
-    s4d.tokenInvalid = true;
-    s4d.tokenError = e;
+client.login('{Bot Token}').catch((e) => {
+    tokenInvalid = true;
+    tokenError = e;
 });
+//#endregion
+//#region 建議的討論串
 function createThread4sugg(username,content,id){
-  const url = `https://discord.com/api/v9/channels/875529441147781130/messages/${id}/threads`;
+  const url = `https://discord.com/api/v9/channels/{Suggest Channel ID}/messages/${id}/threads`;
   var payload = {
   	name: `${username}：${content}`
   };
     request.post(url, {
         body: JSON.stringify(payload),
         headers: {
-      Authorization: `${s4d.client.user?.bot ? "Bot " : ""}${s4d.client.token}`,
+      Authorization: `${client.user?.bot ? "Bot " : ""}${client.token}`,
       'Accept': 'application/json',
       'Content-Type': 'application/json'
     }})
 }
-s4d.client.on('ready', async () => {
+//#endregion
+client.on('ready', async () => {
+    //#region 初始設定&執行其他機器人
     require('./slash.js')
     require('./music.js')
-    require('./cow2.js')
-    require('./slash2.js')
-    require('./web.js')
     _E7_AC_91_E8_A9_B1_E5_BA_AB = ['冰塊最想做什麼事?||退伍 因為他當冰很久了||', '有一天,我去吉野家,可是||吉野不在家||', '我走進眼科診所跟醫生抱怨說:「最近視力變差了,我需要配一副新眼鏡。」他||嘆了一口氣回說:「你真的病得不輕，我這裡可是甜甜圈店啊!」||', '有一隻狼寶寶不吃肉只吃素,狼媽媽、狼爸爸看得很擔心,某天,狼寶寶終於追著一隻兔子跑,牠們感到很欣慰,狼寶寶抓到兔子後說:||快把紅蘿蔔交出來!||', '天上的星星有多重?||8克,因為星巴克||', '有一天,小明去醫院量血壓,血壓計的語音說:血壓升高中，請注意...小明問醫生:為什麼會這樣?醫生回:這表示你的血壓...||國中畢業了。||', '第一個進船的要說什麼?||要說online,因為仙境傳說online||', '小魚問大魚說:你-喜-歡-吃-怎-樣-的-魚?大魚回:我喜歡吃講話慢的魚!小魚說:||醬紫先走||', '小明每次開可樂,瓶蓋都寫銘謝惠顧,有一天,他在考試,突然忘記銘要怎麼寫了,於是他打開桌上的可樂,||結果寫:再來一瓶||', '有一天,我和牛弟弟在吃草,弟弟問我:草是什麼味道?我回:草莓味。弟弟吃了一口草,生氣的說:這草明明沒有味道!我回:我沒有說錯啊...||我剛剛說草沒有味道,草沒味啊!||', '你知道學校的警衛每天早上都在笑什麼嗎？||校門口||'];
-    while (s4d.client && s4d.client.token) {
+    //#endregion
+    while (client) {
+        //#region 狀態
         await delay(50);
-        s4d.client.user.setActivity(String('牛弟弟'));
+        client.user.setActivity(String('牛弟弟'));
         await delay(Number(1) * 15000);
-        s4d.client.user.setActivity(String('牛鄰居'));
+        client.user.setActivity(String('牛鄰居'));
         await delay(Number(1) * 15000);
-        s4d.client.user.setActivity(String('牛龜'));
+        client.user.setActivity(String('牛龜'));
         await delay(Number(1) * 15000);
-        s4d.client.user.setActivity(String('牛肉麵'));
+        client.user.setActivity(String('牛肉麵'));
         await delay(Number(1) * 0);
 
         console.log('哞~狀態輪完一次了~')
-    }
-    while (s4d.client && s4d.client.token) {
-        await delay(50);
-        s4d.database.set(String('ping'), (s4d.client.ws.ping));
-        console.log('哞~測完延遲了!延遲是:' + String(s4d.database.get(String('ping'))) + 'ms');
-        await delay(Number(15) * 1000);
+        //#endregion
     }
 
 });
-//pulljoin start
-s4d.client.on('guildCreate', async (s4dguild) => {
-    s4d.client.channels.cache.get('879496612773240872').send(String(([
-        [s4dguild.name, '     (', s4dguild.id, ')'].join(''), s4dguild.iconURL(), [(s4dguild.owner).user.username, '#', (s4dguild.owner).user.discriminator, '     (', (s4dguild.owner).user.id, ')'].join('')
+//#region 加入紀錄
+client.on('guildCreate', async (cowguild) => {
+    client.channels.cache.get('{Join Log Channel}').send(String(([
+        [cowguild.name, '     (', cowguild.id, ')'].join(''), cowguild.iconURL(), [(cowguild.owner).user.username, '#', (cowguild.owner).user.discriminator, '     (', (cowguild.owner).user.id, ')'].join('')
     ].join('\n'))));
-    s4d.client.channels.cache.get(mainchannel((s4d.client.guilds.cache.get((s4dguild.id))))).send(String('哞!我是牛牛~'));
+    client.channels.cache.get(mainchannel((client.guilds.cache.get((cowguild.id))))).send(String('哞!我是牛牛~'));
 
 });
-//pulljoin end
-s4d.client.on('message', async (s4dmessage) => {
-  //autoreply start
-//*if (((s4dmessage.content).slice(-1).charAt(0) == '嗎' || (s4dmessage.content).slice(-1).charAt(0) == '呢' || (s4dmessage.content).slice(-2).charAt(0) == '呢' || (s4dmessage.content).slice(-2).charAt(0) == '嗎') && ((s4dmessage.channel || {}).id) != '879496612773240872' && (s4dmessage.author.id) != '836204711454834688' && !((String((s4dmessage.content)).includes(String('87'))) || (String((s4dmessage.content)).includes(String('白癡'))) || (String((s4dmessage.content)).includes(String('共產黨'))) || (String((s4dmessage.content)).includes(String('💩'))) || (String((s4dmessage.content)).includes(String('甲賽'))) || (String((s4dmessage.content)).includes(String('你是'))) || (String((s4dmessage.content)).includes(String('黃腔'))))) {
-  //          s4dmessage.channel.send(('哞!感覺可以喔,哞!絕對不要!,哞!這是個值得思考的問題。,哞!應該可以吧!,哞!當然!'.split(',')[(mathRandomInt(1, 5) - 1)]));
-  //      }
-//autoreply end
-  //pullmsg start
-        //pullmsg end
-    //undo point
-  //if (((s4dmessage.guild || {}).id) == '815623990793601065') {
- //           s4dmessage.react('<:Chrome_D:884423066824892466>');
-  //      }
-    if (((s4dmessage.channel || {}).id) == '873863515193090059') {
-        (s4dmessage.member).setNickname((s4dmessage.content));
-        s4dmessage.delete();
-        s4d.client.channels.cache.get('873830415473999895').send(String((['<@', s4dmessage.author.id, '>'].join(''))));
+//#endregion
+client.on('message', async (cowmessage) => {
+    //#region 跨群
+    if (cowmessage.channel.name.startsWith('{Cross Server ID}')){
+    if (cowmessage.author.id==client.user.id) return
+    channels=client.channels.cache
+    embed=cowmessage.embeds[0]
+    attachment=cowmessage.attachments.first()
+    console.log(attachment)
+    current=cowmessage.channel
+    channels.forEach((channel)=>{
+        if (channel.name!=current.name) return
+        if (!attachment){
+            channel.send(`${cowmessage.author.username}:${cowmessage.content}`,{embed})
+        } else {
+            channel.send(`${cowmessage.author.username}:${cowmessage.content}`,{embed,files:[attachment]})
+        }
+    })
+    cowmessage.delete()
     }
-    //end
-       if ((s4dmessage.content) == '🍀') {
-         s4dmessage.channel.startTyping(1);
+    //#endregion
+    //#region 吃草
+       if ((cowmessage.content) == '🍀') {
+         cowmessage.channel.startTyping(1);
          await delay(Number(0.3) * 1000);
-        (s4dmessage.channel).send(String('謝謝!'))
-          s4d.webhook.send(`\`\`\`${s4dmessage.member.user.username}#${s4dmessage.member.user.discriminator}喂我吃草\`\`\``)
-          s4dmessage.channel.stopTyping(true);
+        (cowmessage.channel).send(String('謝謝!'))
+          webhook.send(`\`\`\`${cowmessage.member.user.username}#${cowmessage.member.user.discriminator}餵我吃草\`\`\``)
+          cowmessage.channel.stopTyping(true);
  }
-    if ((s4dmessage.content) == 'Hey,牛牛!' || (s4dmessage.content) == 'hey,牛牛' || (s4dmessage.content) == 'hey牛牛' || (s4dmessage.content) == '<@!836204711454834688>' || (s4dmessage.content) == '<@836204711454834688>'|| (s4dmessage.content) == '/cow'|| (s4dmessage.content) == '牛' || (s4dmessage.content) == '牛牛' || (s4dmessage.content) == ':cow:' || (s4dmessage.content) == '🐮') {
-         s4dmessage.channel.startTyping(1);
+ //#endregion
+    if ((cowmessage.content) == 'Hey,牛牛!' || (cowmessage.content) == 'hey,牛牛' || (cowmessage.content) == 'hey牛牛' || (cowmessage.content) == '<@!836204711454834688>' || (cowmessage.content) == '<@836204711454834688>'|| (cowmessage.content) == '/cow'|| (cowmessage.content) == '牛' || (cowmessage.content) == '牛牛' || (cowmessage.content) == ':cow:' || (cowmessage.content) == '🐮') {
+         cowmessage.channel.startTyping(1);
          await delay(Number(0.5) * 1000);
-        (s4dmessage.channel).send(String('哞!有什麼事嗎?'));
-        s4d.webhook.send(`\`\`\`${s4dmessage.member.user.username}#${s4dmessage.member.user.discriminator}使用 ${s4dmessage.content} 呼叫我\`\`\``)
-        s4dmessage.channel.stopTyping(true);
-        (s4dmessage.channel).awaitMessages((m) => m.author.id === (s4dmessage.member).id, {
+        (cowmessage.channel).send(String('哞!有什麼事嗎?'));
+        webhook.send(`\`\`\`${cowmessage.member.user.username}#${cowmessage.member.user.discriminator}使用 ${cowmessage.content} 呼叫我\`\`\``)
+        cowmessage.channel.stopTyping(true);
+        (cowmessage.channel).awaitMessages((m) => m.author.id === (cowmessage.member).id, {
             time: (5 * 60 * 1000),
             max: 1
         }).then(async (collected) => {
-            s4d.reply = collected.first().content;
-            //coin
-            if ((s4d.reply) == '猜硬幣' || (s4d.reply) == '猜硬幣!') {
-              s4dmessage.channel.startTyping(1);
+            mgr.reply = collected.first().content;
+            //#region 猜硬幣
+            if ((mgr.reply) == '猜硬幣' || (mgr.reply) == '猜硬幣!') {
+              cowmessage.channel.startTyping(1);
          await delay(Number(0.6) * 1000);
         coinnum = mathRandomInt(1, 2);
-        (s4dmessage.channel).send(String('哞!你要猜正面還是反面?'));
-                s4d.webhook.send(`\`\`\`${s4dmessage.member.user.username}#${s4dmessage.member.user.discriminator}想玩猜硬幣\`\`\``)
-        s4dmessage.channel.stopTyping(true);
-        (s4dmessage.channel).awaitMessages((m) => m.author.id === (s4dmessage.member).id, {
+        (cowmessage.channel).send(String('哞!你要猜正面還是反面?'));
+                webhook.send(`\`\`\`${cowmessage.member.user.username}#${cowmessage.member.user.discriminator}想玩猜硬幣\`\`\``)
+        cowmessage.channel.stopTyping(true);
+        (cowmessage.channel).awaitMessages((m) => m.author.id === (cowmessage.member).id, {
             time: (5 * 60 * 1000),
             max: 1
         }).then(async (collected) => {
-            s4d.reply = collected.first().content;
+            mgr.reply = collected.first().content;
             if (coinnum == '1') {
                 cointext = '正面';
-                if ((s4d.reply) == '正' || (s4d.reply) == '正面') {
-                  s4dmessage.channel.startTyping(1);
+                if ((mgr.reply) == '正' || (mgr.reply) == '正面') {
+                  cowmessage.channel.startTyping(1);
          await delay(Number(0.3) * 1000);
-                    s4dmessage.channel.send(String('答對了!'));
-              s4d.webhook.send(`\`\`\`${s4dmessage.member.user.username}#${s4dmessage.member.user.discriminator}玩猜硬幣,他回答正面,答對了\`\`\``)
-                    s4dmessage.channel.stopTyping(true);
+                    cowmessage.channel.send(String('答對了!'));
+              webhook.send(`\`\`\`${cowmessage.member.user.username}#${cowmessage.member.user.discriminator}玩猜硬幣,他回答正面,答對了\`\`\``)
+                    cowmessage.channel.stopTyping(true);
                 } else {
-                  s4dmessage.channel.startTyping(1);
+                  cowmessage.channel.startTyping(1);
          await delay(Number(0.5) * 1000);
-                    s4dmessage.channel.send(String((['錯了,是', cointext, '才對'].join(''))));                  s4d.webhook.send(`\`\`\`${s4dmessage.member.user.username}#${s4dmessage.member.user.discriminator}玩猜硬幣,他回答正面,答錯了\`\`\``)
-                    s4dmessage.channel.stopTyping(true);
+                    cowmessage.channel.send(String((['錯了,是', cointext, '才對'].join(''))));                  webhook.send(`\`\`\`${cowmessage.member.user.username}#${cowmessage.member.user.discriminator}玩猜硬幣,他回答正面,答錯了\`\`\``)
+                    cowmessage.channel.stopTyping(true);
                 }
             } else {
                 cointext = '反面';
-                if ((s4d.reply) == '反' || (s4d.reply) == '反面' || (s4d.reply) == '背面') {
-                  s4dmessage.channel.startTyping(1);
+                if ((mgr.reply) == '反' || (mgr.reply) == '反面' || (mgr.reply) == '背面') {
+                  cowmessage.channel.startTyping(1);
          await delay(Number(0.3) * 1000);
-                    s4dmessage.channel.send(String('答對了!'));
-              s4d.webhook.send(`\`\`\`${s4dmessage.member.user.username}#${s4dmessage.member.user.discriminator}玩猜硬幣,他回答反面,答對了\`\`\``)
-                    s4dmessage.channel.stopTyping(true);
+                    cowmessage.channel.send(String('答對了!'));
+              webhook.send(`\`\`\`${cowmessage.member.user.username}#${cowmessage.member.user.discriminator}玩猜硬幣,他回答反面,答對了\`\`\``)
+                    cowmessage.channel.stopTyping(true);
                 } else {
-                  s4dmessage.channel.startTyping(1);
+                  cowmessage.channel.startTyping(1);
          await delay(Number(0.5) * 1000);
-                    s4dmessage.channel.send(String((['錯了,是', cointext, '才對'].join(''))));
-              s4d.webhook.send(`\`\`\`${s4dmessage.member.user.username}#${s4dmessage.member.user.discriminator}玩猜硬幣,他回答反面,答錯了\`\`\``)
-                    s4dmessage.channel.stopTyping(true);
+                    cowmessage.channel.send(String((['錯了,是', cointext, '才對'].join(''))));
+              webhook.send(`\`\`\`${cowmessage.member.user.username}#${cowmessage.member.user.discriminator}玩猜硬幣,他回答反面,答錯了\`\`\``)
+                    cowmessage.channel.stopTyping(true);
                 }
             }
 
-            s4d.reply = null;
+            mgr.reply = null;
         }).catch(async (e) => {
             console.error(e);
-            s4dmessage.channel.startTyping(1);
+            cowmessage.channel.startTyping(1);
          await delay(Number(0.5) * 1000);
-            (s4dmessage.channel).send(String('哞!你不理我,不跟你玩了!'));
-            s4d.webhook.send(`\`\`\`${s4dmessage.member.user.username}#${s4dmessage.member.user.discriminator}不跟我玩猜硬幣\`\`\``)
-            s4dmessage.channel.stopTyping(true);
+            (cowmessage.channel).send(String('哞!你不理我,不跟你玩了!'));
+            webhook.send(`\`\`\`${cowmessage.member.user.username}#${cowmessage.member.user.discriminator}不跟我玩猜硬幣\`\`\``)
+            cowmessage.channel.stopTyping(true);
         });
     }
-            //coinend
-            //hahastart
-            if ((s4d.reply) == '說笑話!' || (s4d.reply) == '說笑話' || (s4d.reply) == '笑話' || (s4d.reply) == '笑話!') {
-              s4dmessage.channel.startTyping(1);
+            //#endregion
+            //#region 笑話
+            if ((mgr.reply) == '說笑話!' || (mgr.reply) == '說笑話' || (mgr.reply) == '笑話' || (mgr.reply) == '笑話!') {
+              cowmessage.channel.startTyping(1);
          await delay(Number(0.4) * 1000);
-                (s4dmessage.channel).send(String('哞!讓我想想...'));
-                s4dmessage.channel.stopTyping(true);
+                (cowmessage.channel).send(String('哞!讓我想想...'));
+                cowmessage.channel.stopTyping(true);
                 await delay(Number(3) * 1000);
-                s4dmessage.channel.startTyping(1);
+                cowmessage.channel.startTyping(1);
          await delay(Number(0.3) * 1000);
-                (s4dmessage.channel).send(String('啊!我想到了!'));
-                (s4dmessage.channel).send((_E7_AC_91_E8_A9_B1_E5_BA_AB[(mathRandomInt(1, _E7_AC_91_E8_A9_B1_E5_BA_AB.length) - 1)]));
-                s4dmessage.channel.stopTyping(true);
+                (cowmessage.channel).send(String('啊!我想到了!'));
+                (cowmessage.channel).send((_E7_AC_91_E8_A9_B1_E5_BA_AB[(mathRandomInt(1, _E7_AC_91_E8_A9_B1_E5_BA_AB.length) - 1)]));
+                cowmessage.channel.stopTyping(true);
             }
-//haha end
-            //ping start
-            if ((s4d.reply) == '測延遲!' || (s4d.reply) == '測延遲' || (s4d.reply) == '延遲'|| '延遲!' == (s4d.reply)) {
-              s4dmessage.channel.startTyping(1);
+//#endregion
+            //#region 延遲
+            if ((mgr.reply) == '測延遲!' || (mgr.reply) == '測延遲' || (mgr.reply) == '延遲'|| '延遲!' == (mgr.reply)) {
+              cowmessage.channel.startTyping(1);
          await delay(Number(0.4) * 1000);
-                (s4dmessage.channel).send(String('哞!延遲是:' + s4d.client.ws.ping + 'ms'));
-                s4dmessage.channel.stopTyping(true);
+                (cowmessage.channel).send(String('哞!延遲是:' + client.ws.ping + 'ms'));
+                cowmessage.channel.stopTyping(true);
             }
-            //ping end
-            //say start
-            if ('說話' == (s4d.reply) || '說' == (s4d.reply)|| '說!' == (s4d.reply)|| '說話!' == (s4d.reply) || '説話' == (s4d.reply) || '説' == (s4d.reply)|| '説!' == (s4d.reply)|| '説話!' == (s4d.reply)) {
-              s4dmessage.channel.startTyping(1);
+            //#endregion
+            //#region 說話
+            if ('說話' == (mgr.reply) || '說' == (mgr.reply)|| '說!' == (mgr.reply)|| '說話!' == (mgr.reply) || '説話' == (mgr.reply) || '説' == (mgr.reply)|| '説!' == (mgr.reply)|| '説話!' == (mgr.reply)) {
+              cowmessage.channel.startTyping(1);
          await delay(Number(0.4) * 1000);
-            (s4dmessage.channel).send(String('哞!你要我說什麼?'));
-            s4dmessage.channel.stopTyping(true);
-            (s4dmessage.channel).awaitMessages((m) => m.author.id === (s4dmessage.member).id, {
+            (cowmessage.channel).send(String('哞!你要我說什麼?'));
+            cowmessage.channel.stopTyping(true);
+            (cowmessage.channel).awaitMessages((m) => m.author.id === (cowmessage.member).id, {
                 time: (5 * 60 * 1000),
                 max: 1
             }).then(async (collected) => {
-                s4d.reply = collected.first().content;
-                s4dmessage.channel.startTyping(1);
+                mgr.reply = collected.first().content;
+                cowmessage.channel.startTyping(1);
          await delay(Number(0.5) * 1000);
-                s4dmessage.channel.send(String((s4d.reply)));
-                s4dmessage.channel.stopTyping(true);
+                cowmessage.channel.send(String((mgr.reply)));
+                cowmessage.channel.stopTyping(true);
 
-                s4d.reply = null;
+                mgr.reply = null;
             }).catch(async (e) => {
                 console.error(e);
-                s4dmessage.channel.startTyping(1);
+                cowmessage.channel.startTyping(1);
          await delay(Number(0.5) * 1000);
-                s4dmessage.channel.send(String('哞!你不理我,不理你了!'));
-                s4dmessage.channel.stopTyping(true);
+                cowmessage.channel.send(String('哞!你不理我,不理你了!'));
+                cowmessage.channel.stopTyping(true);
             });
         }
-            //say end
-            //ann start
-            //ann end
-            //poll start
-            if ((s4d.reply) == '投票' || (s4d.reply) == '投票!') {
-              s4dmessage.channel.startTyping(1);
+            //#endregion
+            //#region 投票
+            if ((mgr.reply) == '投票' || (mgr.reply) == '投票!') {
+              cowmessage.channel.startTyping(1);
          await delay(Number(0.4) * 1000);
-            (s4dmessage.channel).send(String('哞!投票內容是什麼?'));
-            s4dmessage.channel.stopTyping(true);
-            (s4dmessage.channel).awaitMessages((m) => m.author.id === (s4dmessage.member).id, {
+            (cowmessage.channel).send(String('哞!投票內容是什麼?'));
+            cowmessage.channel.stopTyping(true);
+            (cowmessage.channel).awaitMessages((m) => m.author.id === (cowmessage.member).id, {
                 time: (5 * 60 * 1000),
                 max: 1
             }).then(async (collected) => {
-                s4d.reply = collected.first().content;
-                s4dmessage.channel.startTyping(1);
+                mgr.reply = collected.first().content;
+                cowmessage.channel.startTyping(1);
          await delay(Number(0.5) * 1000);
-                s4dmessage.channel.send(String((s4d.reply))).then(async (s4dreply) => {
-                    s4dreply.react('👍');
-                    s4dreply.react('👎');
+                cowmessage.channel.send(String((mgr.reply))).then(async (cowreply) => {
+                    cowreply.react('👍');
+                    cowreply.react('👎');
 
                 });
-                s4dmessage.channel.stopTyping(true);
+                cowmessage.channel.stopTyping(true);
 
-                s4d.reply = null;
+                mgr.reply = null;
             }).catch(async (e) => {
                 console.error(e);
-                s4dmessage.channel.startTyping(1);
+                cowmessage.channel.startTyping(1);
          await delay(Number(0.5) * 1000);
-                s4dmessage.channel.send(String('哞!你不理我,不理你了!'));
-                s4dmessage.channel.stopTyping(true);
+                cowmessage.channel.send(String('哞!你不理我,不理你了!'));
+                cowmessage.channel.stopTyping(true);
             });
         }
-            //poll end
-            //sugg start
-            if ((s4d.reply) == '建議!' || (s4d.reply) == '建議') {
-              s4dmessage.channel.startTyping(1);
+            //#endregion
+            //#region 建議
+            if ((mgr.reply) == '建議!' || (mgr.reply) == '建議') {
+              cowmessage.channel.startTyping(1);
          await delay(Number(0.4) * 1000);
-            (s4dmessage.channel).send(String('哞!建議內容是什麼?'));
-            s4dmessage.channel.stopTyping(true);
-            (s4dmessage.channel).awaitMessages((m) => m.author.id === (s4dmessage.member).id, {
+            (cowmessage.channel).send(String('哞!建議內容是什麼?'));
+            cowmessage.channel.stopTyping(true);
+            (cowmessage.channel).awaitMessages((m) => m.author.id === (cowmessage.member).id, {
                 time: (5 * 60 * 1000),
                 max: 1
             }).then(async (collected) => {
-                s4d.reply = collected.first().content;
+                mgr.reply = collected.first().content;
                 suggContent4creThread = collected.first().content
-                s4d.client.channels.cache.get('875529441147781130').startTyping(1);
+                client.channels.cache.get('875529441147781130').startTyping(1);
          await delay(Number(0.6) * 1000);
-                s4d.client.channels.cache.get('875529441147781130').send(String((['哞!', s4dmessage.author.username, '傳來了建議!詳細資料如下:'].join(''))),{embed: {
+                client.channels.cache.get('875529441147781130').send(String((['哞!', cowmessage.author.username, '傳來了建議!詳細資料如下:'].join(''))),{embed: {
                         title: null,
                         color: '#FFE153',
                         image: {
                             url: null
                         },
 
-                        description: ([s4dmessage.author.username, ' (', s4dmessage.author.id, ') ', '\n', '從伺服器 ', (s4dmessage.guild || {}).name, ' (', (s4dmessage.guild || {}).id, ') 傳來了新建議:', '\n', s4d.reply].join('')),
+                        description: ([cowmessage.author.username, ' (', cowmessage.author.id, ') ', '\n', '從伺服器 ', (cowmessage.guild || {}).name, ' (', (cowmessage.guild || {}).id, ') 傳來了新建議:', '\n', mgr.reply].join('')),
                         footer: {
                             text: null
                         },
@@ -318,134 +325,132 @@ s4d.client.on('message', async (s4dmessage) => {
 
                     }
                 })
-                .then(message => createThread4sugg(s4dmessage.author.username,suggContent4creThread,message.id))
-                s4d.client.channels.cache.get('875529441147781130').stopTyping(true);		
-                s4dmessage.channel.startTyping(1);
+                .then(message => createThread4sugg(cowmessage.author.username,suggContent4creThread,message.id))
+                client.channels.cache.get('875529441147781130').stopTyping(true);		
+                cowmessage.channel.startTyping(1);
          await delay(Number(0.3) * 1000);
-                s4dmessage.channel.send(String('哞!傳送成功!'));
-                s4dmessage.channel.stopTyping(true);
+                cowmessage.channel.send(String('哞!傳送成功!'));
+                cowmessage.channel.stopTyping(true);
 
-                s4d.reply = null;
+                mgr.reply = null;
             }).catch(async (e) => {
                 console.error(e);
-                s4dmessage.channel.startTyping(1);
+                cowmessage.channel.startTyping(1);
          await delay(Number(0.5) * 1000);
-                s4dmessage.channel.send(String('哞!你不理我,不理你了!'));
-                s4dmessage.channel.stopTyping(true);
+                cowmessage.channel.send(String('哞!你不理我,不理你了!'));
+                cowmessage.channel.stopTyping(true);
             });
         }
 
-            //sugg end
-            //help start
-             if ('幫助' == (s4d.reply) || '幫助!' == (s4d.reply)) {
-               s4dmessage.channel.startTyping(1);
+            //#endregion
+            //#region 幫助
+             if ('幫助' == (mgr.reply) || '幫助!' == (mgr.reply)) {
+               cowmessage.channel.startTyping(1);
          await delay(Number(0.8) * 1000);
-            s4dmessage.channel.send(String((['哞!我是牛牛,一隻很簡單的機器牛。', '目前有下列功能:', '`笑話` :讓我為你說一句笑話!', '`猜硬幣` :讓我陪你玩猜硬幣小遊戲!', '`說話` :讓我一字不差的學你說話!', '`延遲` :測測看我的延遲!', '`邀請` :把我邀請到你的伺服器!', '`建議` :告訴我你想到的新功能!', '`投票` :讓我為你舉行一場投票!', '`頭貼` :好奇某人的頭貼長什麼樣子嗎?讓我來幫你看他的頭貼!', '`時間` :看看現在的時間!', '`網頁截圖` :好奇某個網站什麼樣子嗎?讓我來幫你看它的樣子!', '`短網址` :縮短你的網址!', '敬請期待更多功能!哞~'].join('\n'))));
-            s4dmessage.channel.stopTyping(true);
+            cowmessage.channel.send(String((['哞!我是牛牛,一隻很簡單的機器牛。', '目前有下列功能:', '`笑話` :讓我為你說一句笑話!', '`猜硬幣` :讓我陪你玩猜硬幣小遊戲!', '`說話` :讓我一字不差的學你說話!', '`延遲` :測測看我的延遲!', '`邀請` :把我邀請到你的伺服器!', '`建議` :告訴我你想到的新功能!', '`投票` :讓我為你舉行一場投票!', '`自訂投票` :讓我為你舉行一場自訂選項的投票!', '`頭貼` :好奇某人的頭貼長什麼樣子嗎?讓我來幫你看他的頭貼!', '`時間` :看看現在的時間!', '`網頁截圖` :好奇某個網站什麼樣子嗎?讓我來幫你看它的樣子!', '`短網址` :縮短你的網址!', '`機器人資訊` :查看關於我的資訊!', '敬請期待更多功能!哞~'].join('\n'))));
+            cowmessage.channel.stopTyping(true);
         }
-            //help end
-            //invite start
-            if ((s4d.reply) == '邀請!' || (s4d.reply) == '邀請') {
-              s4dmessage.channel.startTyping(1);
+            //#endregion
+            //#region 邀請
+            if ((mgr.reply) == '邀請!' || (mgr.reply) == '邀請') {
+              cowmessage.channel.startTyping(1);
          await delay(Number(0.6) * 1000);
-            s4dmessage.channel.send(String((['哞!點這裡來邀請我到你的伺服器!', '\n', 'https://cow-moomoomoo.github.io/invite'].join(''))));
-            s4dmessage.channel.stopTyping(true);
+            cowmessage.channel.send(String((['哞!點這裡來邀請我到你的伺服器!', '\n', 'https://cow.c-moo.cf/invite'].join(''))));
+            cowmessage.channel.stopTyping(true);
         }
-            //invite end
-            //color start
-            //color end
-            //avatar start
-            if ((s4d.reply) == '頭貼' || (s4d.reply) == '頭貼!' || (s4d.reply) == '看頭貼' || (s4d.reply) == '看頭貼!') {
-              s4dmessage.channel.startTyping(1);
+            //#endregion
+            //#region 頭貼
+            if ((mgr.reply) == '頭貼' || (mgr.reply) == '頭貼!' || (mgr.reply) == '看頭貼' || (mgr.reply) == '看頭貼!') {
+              cowmessage.channel.startTyping(1);
          await delay(Number(0.7) * 1000);
-            (s4dmessage.channel).send(String('哞!你要我給你看誰的頭貼?請輸入他的ID!'));
-            s4dmessage.channel.stopTyping(true);
-            (s4dmessage.channel).awaitMessages((m) => m.author.id === (s4dmessage.member).id, {
+            (cowmessage.channel).send(String('哞!你要我給你看誰的頭貼?請輸入他的ID!'));
+            cowmessage.channel.stopTyping(true);
+            (cowmessage.channel).awaitMessages((m) => m.author.id === (cowmessage.member).id, {
                 time: (5 * 60 * 1000),
                 max: 1
             }).then(async (collected) => {
-                s4d.reply = collected.first().content;
-                s4dmessage.channel.startTyping(1);
+                mgr.reply = collected.first().content;
+                cowmessage.channel.startTyping(1);
          await delay(Number(0.4) * 1000);
-                s4dmessage.channel.send(String((['哞!這是 ', (((s4dmessage.guild).members.cache.get((s4d.reply)) || await (s4dmessage.guild).members.fetch((s4d.reply)))).user.username, '#', (((s4dmessage.guild).members.cache.get((s4d.reply)) || await (s4dmessage.guild).members.fetch((s4d.reply)))).user.discriminator, ' 的頭貼:'].join(''))));
-                s4dmessage.channel.send(String(((((s4dmessage.guild).members.cache.get((s4d.reply)) || await (s4dmessage.guild).members.fetch((s4d.reply)))).user.displayAvatarURL()))+'?size=4096');
-                s4dmessage.channel.stopTyping(true);
+                cowmessage.channel.send(String((['哞!這是 ', (((cowmessage.guild).members.cache.get((mgr.reply)) || await (cowmessage.guild).members.fetch((mgr.reply)))).user.username, '#', (((cowmessage.guild).members.cache.get((mgr.reply)) || await (cowmessage.guild).members.fetch((mgr.reply)))).user.discriminator, ' 的頭貼:'].join(''))));
+                cowmessage.channel.send(String(((((cowmessage.guild).members.cache.get((mgr.reply)) || await (cowmessage.guild).members.fetch((mgr.reply)))).user.displayAvatarURL()))+'?size=4096');
+                cowmessage.channel.stopTyping(true);
 
-                s4d.reply = null;
+                mgr.reply = null;
             }).catch(async (e) => {
                 console.error(e);
-                s4dmessage.channel.startTyping(1);
+                cowmessage.channel.startTyping(1);
          await delay(Number(0.5) * 1000);
-                s4dmessage.channel.send(String('哞!你不理我,不理你了!'));
-                s4dmessage.channel.stopTyping(true);
+                cowmessage.channel.send(String('哞!你不理我,不理你了!'));
+                cowmessage.channel.stopTyping(true);
             });
         }
-//avatar end
-//time start
-if ((s4d.reply) == '時間' || (s4d.reply) == '時間!') {
- s4dmessage.channel.startTyping(1);
+//#endregion
+            //#region 時間
+if ((mgr.reply) == '時間' || (mgr.reply) == '時間!') {
+ cowmessage.channel.startTyping(1);
          await delay(Number(0.5) * 1000); 
-                s4dmessage.channel.send(String((['哞!現在的時間是:<t:',Math.floor(+ new Date()/1000),':F>'].join(''))));
-                s4dmessage.channel.stopTyping(true);
+                cowmessage.channel.send(String((['哞!現在的時間是:<t:',Math.floor(+ new Date()/1000),':F>'].join(''))));
+                cowmessage.channel.stopTyping(true);
             }
-            //time end
-            //wss start
-            if ((s4d.reply) == '網頁截圖' || (s4d.reply) == '網頁截圖!' || (s4d.reply) == '截圖!' || (s4d.reply) == '截圖') {
-              s4dmessage.channel.startTyping(1);
+            //#endregion
+            //#region 網頁截圖
+            if ((mgr.reply) == '網頁截圖' || (mgr.reply) == '網頁截圖!' || (mgr.reply) == '截圖!' || (mgr.reply) == '截圖') {
+              cowmessage.channel.startTyping(1);
          await delay(Number(0.7) * 1000);
-                (s4dmessage.channel).send(String('哞!你要我給你看哪個網站的截圖?請輸入網址!'));
-                s4dmessage.channel.stopTyping(true);
-                (s4dmessage.channel).awaitMessages((m) => m.author.id === (s4dmessage.member).id, {
+                (cowmessage.channel).send(String('哞!你要我給你看哪個網站的截圖?請輸入網址!'));
+                cowmessage.channel.stopTyping(true);
+                (cowmessage.channel).awaitMessages((m) => m.author.id === (cowmessage.member).id, {
                     time: (5 * 60 * 1000),
                     max: 1
                 }).then(async (collected) => {
-                    s4d.reply = collected.first().content;
-                    if ((((s4d.reply) || '').startsWith('http://' || '')) || (((s4d.reply) || '').startsWith('https://' || ''))) {
-                      s4dmessage.channel.startTyping(1);
+                    mgr.reply = collected.first().content;
+                    if ((((mgr.reply) || '').startsWith('http://' || '')) || (((mgr.reply) || '').startsWith('https://' || ''))) {
+                      cowmessage.channel.startTyping(1);
          await delay(Number(0.3) * 1000);
-                        s4dmessage.channel.send(String((['哞!這是`', s4d.reply, '`的截圖:'].join(''))));
-                        s4dmessage.channel.send(String(('https://urlscan.io/liveshot/?width=1920&height=1080&url=' + encodeURIComponent(String(s4d.reply)))));
-                s4dmessage.channel.stopTyping(true);
+                        cowmessage.channel.send(String((['哞!這是`', mgr.reply, '`的截圖:'].join(''))));
+                        cowmessage.channel.send(String(('https://urlscan.io/liveshot/?width=1920&height=1080&url=' + encodeURIComponent(String(mgr.reply)))));
+                cowmessage.channel.stopTyping(true);
                     } else {
-                      s4dmessage.channel.startTyping(1);
+                      cowmessage.channel.startTyping(1);
          await delay(Number(0.4) * 1000);
-                        s4dmessage.channel.send(String('哞!這不是網址!'));
-                s4dmessage.channel.stopTyping(true);
+                        cowmessage.channel.send(String('哞!這不是網址!'));
+                cowmessage.channel.stopTyping(true);
                     }
 
-                    s4d.reply = null;
+                    mgr.reply = null;
                 }).catch(async (e) => {
                     console.error(e);
-                    s4dmessage.channel.startTyping(1);
+                    cowmessage.channel.startTyping(1);
          await delay(Number(0.5) * 1000);
-                    s4dmessage.channel.send(String('哞!你不理我,不理你了!'));
-                s4dmessage.channel.stopTyping(true);
+                    cowmessage.channel.send(String('哞!你不理我,不理你了!'));
+                cowmessage.channel.stopTyping(true);
                 });
             }
-            //wss end
-            //shortlink start
-            if ((s4d.reply) == '短網址' || (s4d.reply) == '短網址!' || (s4d.reply) == '短址!' || (s4d.reply) == '短址') {
-              s4dmessage.channel.startTyping(1);
+            //#endregion
+            //#region 短網址
+            if ((mgr.reply) == '短網址' || (mgr.reply) == '短網址!' || (mgr.reply) == '短址!' || (mgr.reply) == '短址') {
+              cowmessage.channel.startTyping(1);
          await delay(Number(0.6) * 1000);
-                    (s4dmessage.channel).send(String('哞!你要我縮短哪個網址?'));
+                    (cowmessage.channel).send(String('哞!你要我縮短哪個網址?'));
               
-                s4dmessage.channel.stopTyping(true);
-                    (s4dmessage.channel).awaitMessages((m) => m.author.id === (s4dmessage.member).id, {
+                cowmessage.channel.stopTyping(true);
+                    (cowmessage.channel).awaitMessages((m) => m.author.id === (cowmessage.member).id, {
                         time: (5 * 60 * 1000),
                         max: 1
                     }).then(async (collected) => {
-                        s4d.reply = collected.first().content;
-                        if ((((s4d.reply) || '').startsWith('http://' || '')) || (((s4d.reply) || '').startsWith('https://' || ''))) {
+                        mgr.reply = collected.first().content;
+                        if ((((mgr.reply) || '').startsWith('http://' || '')) || (((mgr.reply) || '').startsWith('https://' || ''))) {
 
 const options = {
     url: 'https://mooshort.repl.co/api/create',
     form: {
-        'url':s4d.reply
+        'url':mgr.reply
     }
 };
 //var cowshortlink
                           
-  s4dmessage.channel.startTyping(1);
+  cowmessage.channel.startTyping(1);
         await  delay(Number(0.5) * 1000);
 request.post(options, (err, res, body) => {
     if (err) {
@@ -453,119 +458,169 @@ request.post(options, (err, res, body) => {
     }
     console.log(JSON.parse(body)['url']);
  cowshortlink=(JSON.parse(body)['url'])
-  s4dmessage.channel.send({
+  cowmessage.channel.send({
                                 embeds: null,
                                 content: String(('哞!你的短網址: `' + String(cowshortlink)+'`'))
                             });
 });                          
-                s4dmessage.channel.stopTyping(true);
+                cowmessage.channel.stopTyping(true);
                         } else {
-                          s4dmessage.channel.startTyping(1);
+                          cowmessage.channel.startTyping(1);
          await delay(Number(0.4) * 1000);
-                            s4dmessage.channel.send({
+                            cowmessage.channel.send({
                                 embeds: null,
                                 content: String('哞!這不是網址!')
                             });
-                s4dmessage.channel.stopTyping(true);
+                cowmessage.channel.stopTyping(true);
                         }
 
-                        s4d.reply = null;
+                        mgr.reply = null;
                     }).catch(async (e) => {
                         console.error(e);
-                      s4dmessage.channel.startTyping(1);
+                      cowmessage.channel.startTyping(1);
          await delay(Number(0.5) * 1000);
-                        s4dmessage.channel.send({
+                        cowmessage.channel.send({
                             embeds: null,
                             content: String('哞!你不理我,不理你了!')
                         });                      
-                s4dmessage.channel.stopTyping(true);
+                cowmessage.channel.stopTyping(true);
                     });
                 }
-                //shortlink end
-            //yt2gether start
-                /*if ('一起看YouTube' == (s4d.reply) || '一起看YouTube!' == (s4d.reply) || '一起看youtube' == (s4d.reply) || '一起看YT' == (s4d.reply) || '一起看yt' == (s4d.reply) || '一起YT' == (s4d.reply) || '一起yt' == (s4d.reply)) {
-               s4dmessage.channel.startTyping(1);
-         await delay(Number(0.6) * 1000);
-                    if (message.member.voice.channel.id){
-                    s4d.together.createTogetherCode(message.member.voice.channel.id, 'youtube').then(async invite => {
-    return s4dmessage.channel.send(`哞!點擊連結開始看Youtube! **${invite.code}/**`);
-});
-            s4dmessage.channel.stopTyping(true);
-        } else {
-            s4dmessage.channel.startTyping(1);
+                //#endregion
+            //#region 自訂投票
+            if ((mgr.reply) == '自訂投票' || (mgr.reply) == '自訂投票!') {
+              cowmessage.channel.startTyping(1);
+         await delay(Number(0.4) * 1000);
+            (cowmessage.channel).send(String('哞!投票內容是什麼?'));
+            cowmessage.channel.stopTyping(true);
+            (cowmessage.channel).awaitMessages((m) => m.author.id === (cowmessage.member).id, {
+                time: (5 * 60 * 1000),
+                max: 1
+            }).then(async (collected) => {
+                let pollcontent = collected.first().content;
+                cowmessage.channel.startTyping(1);
+         await delay(Number(0.4) * 1000);
+            (cowmessage.channel).send(String('哞!投票選項有哪些?使用\`;\`分隔選項!'));
+            cowmessage.channel.stopTyping(true);
+            (cowmessage.channel).awaitMessages((m) => m.author.id === (cowmessage.member).id, {
+                time: (5 * 60 * 1000),
+                max: 1
+            }).then(async (collected) => {
+                mgr.reply = collected.first().content;
+                const polloption = mgr.reply.split(';')
+                if (polloption.length>20){
+                    cowmessage.channel.startTyping(1);
          await delay(Number(0.5) * 1000);
-            s4dmessage.channel.send('哞!請先加入語音頻道!')
-            s4dmessage.channel.stopTyping(true);
-        }}*/
-            //yt2gether end
-            //trust me start
-            
-                //trust me end
+                cowmessage.channel.send(String('哞!太多選項了!'));
+                cowmessage.channel.stopTyping(true);
+                    return
+                }
+                let pollemotes = []
+                polloption.forEach((item,index)=>{
+                    polloption[index]=`${alphlist[index]}-${item}`
+                    pollemotes.push(alphlist[index])
+                })
+                cowmessage.channel.startTyping(1);
+         await delay(Number(0.5) * 1000);            
+                cowmessage.channel.send(`${pollcontent}\n${polloption.join('\n')}`).then(async (cowreply) => {
+                    pollemotes.forEach(item=>{
+                         cowreply.react(item)
+					})             
 
-            s4d.reply = null;
+                });
+                cowmessage.channel.stopTyping(true);
+
+                mgr.reply = null;
+            }).catch(async (e) => {
+                console.error(e);
+                cowmessage.channel.startTyping(1);
+         await delay(Number(0.5) * 1000);
+                cowmessage.channel.send(String('哞!你不理我,不理你了!'));
+                cowmessage.channel.stopTyping(true);
+            });
+                }).catch(async (e) => {
+                console.error(e);
+                cowmessage.channel.startTyping(1);
+         await delay(Number(0.5) * 1000);
+                cowmessage.channel.send(String('哞!你不理我,不理你了!'));
+                cowmessage.channel.stopTyping(true);
+            });
+        }
+            //#endregion
+               
+            //#region 機器人資訊
+            if ((mgr.reply) == '機器人資訊' || (mgr.reply) == '機器人資訊!' || (mgr.reply) == '資訊!' || (mgr.reply) == '資訊') {
+              cowmessage.channel.startTyping(1);
+         await delay(Number(0.9) * 1000);
+const rendermsg = ['牛牛 v0.2.6']
+rendermsg.push(`伺服器數量:\`${client.guilds.cache.size}\``)
+rendermsg.push(`CPU型號:\`${so.cpus()[0].model}\``)
+rendermsg.push(`CPU使用量:\`${cpu.toString().slice(0,4)}%\``)
+rendermsg.push(`已上線\`${Math.floor(client.uptime/1000)}秒\``)
+rendermsg.push(`於<t:${Math.floor(client.readyTimestamp/1000)}:F>上線`)
+                cowmessage.channel.send(rendermsg.join('\n'))
+                cowmessage.channel.stopTyping(true);
+            }
+                //#endregion
+            
+            mgr.reply = null;
         }).catch(async (e) => {
             console.error(e);
-            s4dmessage.channel.startTyping(1);
+            cowmessage.channel.startTyping(1);
          await delay(Number(0.5) * 1000);
-            (s4dmessage.channel).send(String('哞!你不回我,不理你了!'));
-            s4dmessage.channel.stopTyping(true);
+            (cowmessage.channel).send(String('哞!你不回我,不理你了!'));
+            cowmessage.channel.stopTyping(true);
         });
     }
 
 });
-//undo start
-s4d.client.on('guildMemberAdd', async (param1) => {
-    s4d.joiningMember = param1;
-    if ((s4d.joiningMember.guild.id) == '871592803283660871') {
-        if ((s4d.joiningMember).user.bot) {
-            for (var count = 0; count < 10; count++) {
-                (s4d.joiningMember).roles.remove((s4d.joiningMember).guild.roles.cache.find((role) => role.id === '871998225320652831' || role.name === '871998225320652831' || '@' + role.name === '871998225320652831'));
-            }
-            (s4d.joiningMember).setNickname('機器人');
+//#region API
+api.use(req=>{
+    switch(req.url){
+        case '/delay':
+        req.body = {
+            delay: client.ws.ping
         }
+        break;
     }
-    if ((s4d.joiningMember.guild.id) == '848141774119370774') {
-        if ((s4d.joiningMember).user.bot) {
-            for (var count = 0; count < 10; count++) {
-                (s4d.joiningMember).roles.remove((s4d.joiningMember).guild.roles.cache.find((role) => role.id === '848392144514973696' || role.name === '848392144514973696' || '@' + role.name === '848392144514973696'));
-                (s4d.joiningMember).roles.add((s4d.joiningMember).guild.roles.cache.find((role) => role.id === '848392779401920523' || role.name === '848392779401920523' || '@' + role.name === '848392779401920523'));
-            }
-            (s4d.joiningMember).setNickname('吐司');
-        }
+    if (String(req.url).startsWith('/poll')){
+        const args = String(req.url).split('/')
+        const sussypwd = args[2]
+        const channe = args[3]
+        const content = args[4]
+        if (sussypwd!='{Poll API Password}') return;
+       client.channels.cache.get(channe).send(decodeURIComponent(String(content))).then(async (cowreply) => {
+                    cowreply.react('👍');
+                    cowreply.react('👎');
+                });
     }
-if ((s4d.joiningMember.guild.id) == '858984157929144321') {
-        if ((s4d.joiningMember).user.bot) {
-            (s4d.joiningMember).roles.add((s4d.joiningMember).guild.roles.cache.find((role) => role.id === '859642245006622720' || role.name === '859642245006622720' || '@' + role.name === '859642245006622720'));
-        } else {
-            (s4d.joiningMember).roles.add((s4d.joiningMember).guild.roles.cache.find((role) => role.id === '858987687657340958' || role.name === '858987687657340958' || '@' + role.name === '858987687657340958'));
-        }
-    }
-    //panadol
-    if ((s4d.joiningMember.guild.id) == '870853300172521493') {
-        if ((s4d.joiningMember).user.bot) {
-            for (var count = 0; count < 10; count++) {
-                (s4d.joiningMember).roles.remove((s4d.joiningMember).guild.roles.cache.find((role) => role.id === '870859641238724648' || role.name === '870859641238724648' || '@' + role.name === '870859641238724648'));
-            }
-            (s4d.joiningMember).roles.add((s4d.joiningMember).guild.roles.cache.find((role) => role.id === '870860380677763112' || role.name === '870860380677763112' || '@' + role.name === '870860380677763112'));
-        }
-    }
-    //panadol end
-    s4d.joiningMember = null
-});
-s4d.client.on('guildMemberRemove', async (param1) => {
-    s4d.leavingMember = param1;
-    if ((s4d.leavingMember.guild.id) == '871592803283660871') {
-        (((s4d.leavingMember.guild).members.cache.get((s4d.leavingMember.id)) || await (s4d.leavingMember.guild).members.fetch((s4d.leavingMember.id)))).send(String('https://discord.gg/YB6rQaHcWp'));
-    }
-    s4d.leavingMember = null
-});
-//end
-//buttons
-//s4d.client.on('clickButton', async (button) => {
-//    if ((button.id) == 'trustme') {
-  //      await button.reply.send('https://imgur.com/QpL39fW', true)
- //   }
+})
+api.listen({Port})
+//#endregion
 
-
-
-s4d;
+//#region 按鈕處理程式
+client.on('clickButton',async click => {
+        console.log(click.reply.send)
+        console.log('ayo')
+        switch(click.id){
+            case 'rolemc':
+            if (click.clicker.member.roles.cache.has('956545652211478538')){
+            click.clicker.member.roles.remove('956545652211478538')
+            click.reply.send('哞!已移除Minecraft區的權限!',{ephemeral:true})
+        }else{
+            click.clicker.member.roles.add('956545652211478538')
+            click.reply.send('哞!已添加Minecraft區的權限!',{ephemeral:true})
+        }
+        break;
+        case 'rolecow':
+        if (click.clicker.member.roles.cache.has('957031886125957120')){
+            click.clicker.member.roles.remove('957031886125957120')
+            click.reply.send('哞!已移除牛牛區的權限!',{ephemeral:true})
+        }else{
+            click.clicker.member.roles.add('957031886125957120')
+            click.reply.send('哞!已添加牛牛區的權限!',{ephemeral:true})
+        }
+        break;
+    }
+    })
+//#endregion

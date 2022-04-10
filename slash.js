@@ -3,6 +3,12 @@ const request = require('request')
 let suggContent4creThread
 let Discord;
 let Database;
+
+var cpu
+os.cpuUsage((v) => {cpu = v});
+setInterval(()=>{os.cpuUsage((v) => {cpu = v});},1000)
+
+var alphlist = ['🇦','🇧','🇨','🇩','🇪','🇫','🇬','🇭','🇮','🇯','🇰','🇱','🇲','🇳','🇴','🇵','🇶','🇷','🇸','🇹','🇺','🇻','🇼','🇽','🇾','🇿']
 if (typeof window !== "undefined") {
     Discord = DiscordJS;
     Database = EasyDatabase;
@@ -43,12 +49,12 @@ const {
 } = require('discord.js');
 var _E7_AC_91_E8_A9_B1_E5_BA_AB, coinnum, cointext, color;
 _E7_AC_91_E8_A9_B1_E5_BA_AB = ['冰塊最想做什麼事?||退伍 因為他當冰很久了||', '有一天,我去吉野家,可是||吉野不在家||', '我走進眼科診所跟醫生抱怨說:「最近視力變差了,我需要配一副新眼鏡。」他||嘆了一口氣回說:「你真的病得不輕，我這裡可是甜甜圈店啊!」||', '有一隻狼寶寶不吃肉只吃素,狼媽媽、狼爸爸看得很擔心,某天,狼寶寶終於追著一隻兔子跑,牠們感到很欣慰,狼寶寶抓到兔子後說:||快把紅蘿蔔交出來!||', '天上的星星有多重?||8克,因為星巴克||', '有一天,小明去醫院量血壓,血壓計的語音說:血壓升高中，請注意...小明問醫生:為什麼會這樣?醫生回:這表示你的血壓...||國中畢業了。||', '第一個進船的要說什麼?||要說online,因為仙境傳說online||', '小魚問大魚說:你-喜-歡-吃-怎-樣-的-魚?大魚回:我喜歡吃講話慢的魚!小魚說:||醬紫先走||', '小明每次開可樂,瓶蓋都寫銘謝惠顧,有一天,他在考試,突然忘記銘要怎麼寫了,於是他打開桌上的可樂,||結果寫:再來一瓶||', '有一天,我和牛弟弟在吃草,弟弟問我:草是什麼味道?我回:草莓味。弟弟吃了一口草,生氣的說:這草明明沒有味道!我回:我沒有說錯啊...||我剛剛說草沒有味道,草沒味啊!||', '你知道學校的警衛每天早上都在笑什麼嗎？||校門口||'];
-s4d.client.login('Removed').catch((e) => {
+s4d.client.login('{Bot Token}').catch((e) => {
     s4d.tokenInvalid = true;
     s4d.tokenError = e;
 });
 function createThread4sugg(username,content,id){
-  const url = `https://discord.com/api/v9/channels/875529441147781130/messages/${id}/threads`;
+  const url = `https://discord.com/api/v9/channels/{Suggest Channel ID}/messages/${id}/threads`;
   var payload = {
   	name: `${username}：${content}`
   };
@@ -177,7 +183,7 @@ s4d.client.channels.cache.get(channel).send((_E7_AC_91_E8_A9_B1_E5_BA_AB[(mathRa
         data: {
             type: 4,
             data: {
-                content: String((['哞!點這裡來邀請我到你的伺服器!', '\n', 'https://cow-moomoomoo.github.io/invite'].join('')))
+                content: String((['哞!點這裡來邀請我到你的伺服器!', '\n', 'https://littlecow-moo.github.io/invite'].join('')))
             }
         }
     })
@@ -425,6 +431,53 @@ if (sub==='screenshot'){
     //#endregion
 }
 //#endregion
+//#region custompoll
+if (sub==='custompoll'){
+    s4d.client.api.interactions(interaction.id, interaction.token).callback.post({
+        data: {
+            type: 4,
+            data: {
+                content: '哞!投票內容是什麼?'
+            }}})
+            s4d.client.channels.cache.get(channel).awaitMessages((m) => m.author.id === user, {
+                time: (5 * 60 * 1000),
+                max: 1
+            }).then(async (collected) => {
+                let pollcontent = collected.first().content;
+                s4d.client.channels.cache.get(channel).send(String('哞!投票選項有哪些?使用\`;\`分隔選項!'));;
+                s4d.client.channels.cache.get(channel).awaitMessages((m) => m.author.id === user, {
+                time: (5 * 60 * 1000),
+                max: 1
+            }).then(async (collected) => {
+                s4d.reply = collected.first().content;
+                const polloption = s4d.reply.split(';')
+                if (polloption.length>20){
+                s4d.client.channels.cache.get(channel).send(String('哞!太多選項了!'));
+                    return
+                }
+                let pollemotes = []
+                polloption.forEach((item,index)=>{
+                    polloption[index]=`${alphlist[index]}-${item}`
+                    pollemotes.push(alphlist[index])
+                })           
+                s4d.client.channels.cache.get(channel).send(`${pollcontent}\n${polloption.join('\n')}`).then(async (s4dreply) => {
+                    pollemotes.forEach(item=>{
+                         s4dreply.react(item)
+					})             
+
+                });
+
+                s4d.reply = null;
+            }).catch(async (e) => {
+                console.error(e);
+                s4d.client.channels.cache.get(channel).send(String('哞!你不理我,不理你了!'));
+            });
+                }).catch(async (e) => {
+                console.error(e);
+         s4d.client.channels.cache.get(channel).send(String('哞!你不理我,不理你了!'));
+            });
+}
+//#endregion
 //#region shortlink
 if (sub==='shortlink'){
     s4d.client.api.interactions(interaction.id, interaction.token).callback.post({
@@ -481,6 +534,23 @@ s4d.client.channels.cache.get(channel).send({
     //#endregion
 }
 //#endregion
+      //#region botinfo
+      if (sub=='botinfo') {
+const rendermsg = ['牛牛 v0.2.6']
+rendermsg.push(`伺服器數量:\`${client.guilds.cache.size}\``)
+rendermsg.push(`CPU使用量:\`${cpu.toString().slice(0,4)}%\``)
+rendermsg.push(`已上線\`${Math.floor(s4d.client.uptime/1000)}秒\``)
+rendermsg.push(`於<t:${Math.floor(client.readyTimestamp/1000)}:F>上線`)
+                
+    s4d.client.api.interactions(interaction.id, interaction.token).callback.post({
+        data: {
+            type: 4,
+            data: {
+                content: rendermsg.join('\n')
+            }
+        }
+    })
+            }
 //#region hey
 if (sub==='hey'){
     s4d.client.api.interactions(interaction.id, interaction.token).callback.post({
@@ -612,6 +682,48 @@ s4d.client.channels.cache.get(channel).send((_E7_AC_91_E8_A9_B1_E5_BA_AB[(mathRa
         });
     }
         //poll end
+        //custompoll start
+        if ((s4d.reply) == '自訂投票' || (s4d.reply) == '自訂投票!') {
+            s4d.client.channels.cache.get(channel).send(String('哞!投票內容是什麼?'));
+            s4d.client.channels.cache.get(channel).awaitMessages((m) => m.author.id === user, {
+                time: (5 * 60 * 1000),
+                max: 1
+            }).then(async (collected) => {
+                let pollcontent = collected.first().content;
+            s4d.client.channels.cache.get(channel).send(String('哞!投票選項有哪些?使用\`;\`分隔選項!'));
+            s4d.client.channels.cache.get(channel).awaitMessages((m) => m.author.id === user, {
+                time: (5 * 60 * 1000),
+                max: 1
+            }).then(async (collected) => {
+                s4d.reply = collected.first().content;
+                const polloption = s4d.reply.split(';')
+                if (polloption.length>20){
+                s4d.client.channels.cache.get(channel).send(String('哞!太多選項了!'));
+                    return
+                }
+                let pollemotes = []
+                polloption.forEach((item,index)=>{
+                    polloption[index]=`${alphlist[index]}-${item}`
+                    pollemotes.push(alphlist[index])
+                })     
+                s4d.client.channels.cache.get(channel).send(`${pollcontent}\n${polloption.join('\n')}`).then(async (s4dreply) => {
+                    pollemotes.forEach(item=>{
+                         s4dreply.react(item)
+					})             
+
+                });
+
+                s4d.reply = null;
+            }).catch(async (e) => {
+                console.error(e);
+                s4d.client.channels.cache.get(channel).send(String('哞!你不理我,不理你了!'));
+            });
+                }).catch(async (e) => {
+                console.error(e);
+                s4d.client.channels.cache.get(channel).send(String('哞!你不理我,不理你了!'));
+            });
+        }
+        //custompoll end
         //sugg start
         if ((s4d.reply) == '建議!' || (s4d.reply) == '建議') {
          
@@ -704,6 +816,15 @@ if ((s4d.reply) == '時間' || (s4d.reply) == '時間!') {
              
         }
         //time end
+        //botinfo
+        if ((s4d.reply) == '機器人資訊' || (s4d.reply) == '機器人資訊!' || (s4d.reply) == '資訊!' || (s4d.reply) == '資訊') {
+const rendermsg = ['牛牛 v0.2.6']
+rendermsg.push(`伺服器數量:\`${s4d.client.guilds.cache.size}\``)
+rendermsg.push(`CPU使用量:\`${cpu.toString().slice(0,4)}%\``)
+rendermsg.push(`已上線\`${Math.floor(s4d.client.uptime/1000)}秒\``)
+rendermsg.push(`於<t:${Math.floor(s4d.client.readyTimestamp/1000)}:F>上線`)
+                s4d.client.channels.cache.get(channel).send(rendermsg.join('\n'))
+            }
         //wss start
         if ((s4d.reply) == '網頁截圖' || (s4d.reply) == '網頁截圖!' || (s4d.reply) == '截圖!' || (s4d.reply) == '截圖') {
           
