@@ -369,7 +369,7 @@ if (sub==='suggest'){
             }).then(async (collected) => {
                 s4d.reply = collected.first().content;
         suggContent4creThread = collected.first().content
-                s4d.client.channels.cache.get('875529441147781130').send(String((['哞!', interaction.member.user.username, '傳來了建議!詳細資料如下:'].join(''))),{
+                s4d.client.channels.cache.get('{Suggest Channel ID}').send(String((['哞!', interaction.member.user.username, '傳來了建議!詳細資料如下:'].join(''))),{
                     embed: {
                         title: null,
                         color: '#FFE153',

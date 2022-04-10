@@ -306,9 +306,9 @@ client.on('message', async (cowmessage) => {
             }).then(async (collected) => {
                 mgr.reply = collected.first().content;
                 suggContent4creThread = collected.first().content
-                client.channels.cache.get('875529441147781130').startTyping(1);
+                client.channels.cache.get('{Suggest Channel ID}').startTyping(1);
          await delay(Number(0.6) * 1000);
-                client.channels.cache.get('875529441147781130').send(String((['哞!', cowmessage.author.username, '傳來了建議!詳細資料如下:'].join(''))),{embed: {
+                client.channels.cache.get('{Suggest Channel ID}').send(String((['哞!', cowmessage.author.username, '傳來了建議!詳細資料如下:'].join(''))),{embed: {
                         title: null,
                         color: '#FFE153',
                         image: {
@@ -326,7 +326,7 @@ client.on('message', async (cowmessage) => {
                     }
                 })
                 .then(message => createThread4sugg(cowmessage.author.username,suggContent4creThread,message.id))
-                client.channels.cache.get('875529441147781130').stopTyping(true);		
+                client.channels.cache.get('{Suggest Channel ID}').stopTyping(true);		
                 cowmessage.channel.startTyping(1);
          await delay(Number(0.3) * 1000);
                 cowmessage.channel.send(String('哞!傳送成功!'));
