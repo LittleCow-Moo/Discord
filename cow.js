@@ -552,11 +552,13 @@ request.post(options, (err, res, body) => {
             if ((mgr.reply) == '機器人資訊' || (mgr.reply) == '機器人資訊!' || (mgr.reply) == '資訊!' || (mgr.reply) == '資訊') {
               cowmessage.channel.startTyping(1);
          await delay(Number(0.9) * 1000);
-const rendermsg = ['牛牛 v0.2.6']
+const rendermsg = ['牛牛 v0.2.7']
 rendermsg.push(`伺服器數量:\`${client.guilds.cache.size}\``)
 rendermsg.push(`CPU型號:\`${so.cpus()[0].model}\``)
 rendermsg.push(`CPU使用量:\`${cpu.toString().slice(0,4)}%\``)
-rendermsg.push(`已上線\`${Math.floor(client.uptime/1000)}秒\``)
+let tempTime = moment.duration(client.uptime);
+let y = `${tempTime.hours()}時${tempTime.minutes()}分${tempTime.seconds()}秒`;
+rendermsg.push(`已上線\`${y}\``)
 rendermsg.push(`於<t:${Math.floor(client.readyTimestamp/1000)}:F>上線`)
                 cowmessage.channel.send(rendermsg.join('\n'))
                 cowmessage.channel.stopTyping(true);

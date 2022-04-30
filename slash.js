@@ -15,6 +15,7 @@ if (typeof window !== "undefined") {
 } else {
     Discord = require("discord.js");
     Database = require("easy-json-database");
+    var moment = require("moment")
 }
 const delay = (ms) => new Promise((resolve) => setTimeout(() => resolve(), ms));  
 function mathRandomInt(a, b) {
@@ -536,12 +537,15 @@ s4d.client.channels.cache.get(channel).send({
 //#endregion
       //#region botinfo
       if (sub=='botinfo') {
-const rendermsg = ['牛牛 v0.2.6']
-rendermsg.push(`伺服器數量:\`${client.guilds.cache.size}\``)
+const rendermsg = ['牛牛 v0.2.7']
+rendermsg.push(`伺服器數量:\`${s4d.client.guilds.cache.size}\``)
+rendermsg.push(`CPU型號:\`${so.cpus()[0].model}\``)
 rendermsg.push(`CPU使用量:\`${cpu.toString().slice(0,4)}%\``)
-rendermsg.push(`已上線\`${Math.floor(s4d.client.uptime/1000)}秒\``)
-rendermsg.push(`於<t:${Math.floor(client.readyTimestamp/1000)}:F>上線`)
-                
+let tempTime = moment.duration(s4d.client.uptime);
+let y = `${tempTime.hours()}時${tempTime.minutes()}分${tempTime.seconds()}秒`;
+rendermsg.push(`已上線\`${y}\``)
+rendermsg.push(`於<t:${Math.floor(s4d.client.readyTimestamp/1000)}:F>上線`)
+               
     s4d.client.api.interactions(interaction.id, interaction.token).callback.post({
         data: {
             type: 4,
@@ -818,10 +822,12 @@ if ((s4d.reply) == '時間' || (s4d.reply) == '時間!') {
         //time end
         //botinfo
         if ((s4d.reply) == '機器人資訊' || (s4d.reply) == '機器人資訊!' || (s4d.reply) == '資訊!' || (s4d.reply) == '資訊') {
-const rendermsg = ['牛牛 v0.2.6']
+const rendermsg = ['牛牛 v0.2.7']
 rendermsg.push(`伺服器數量:\`${s4d.client.guilds.cache.size}\``)
 rendermsg.push(`CPU使用量:\`${cpu.toString().slice(0,4)}%\``)
-rendermsg.push(`已上線\`${Math.floor(s4d.client.uptime/1000)}秒\``)
+let tempTime = moment.duration(s4d.client.uptime);
+let y = `${tempTime.hours()}時${tempTime.minutes()}分${tempTime.seconds()}秒`;
+rendermsg.push(`已上線\`${y}\``)
 rendermsg.push(`於<t:${Math.floor(s4d.client.readyTimestamp/1000)}:F>上線`)
                 s4d.client.channels.cache.get(channel).send(rendermsg.join('\n'))
             }
