@@ -1,0 +1,26 @@
+{
+    "name": "2048",
+    "playerLeft": "哞!<player>不玩了", 
+    "score": "分數:<score>", 
+    "controller": {
+      "up": "⬆️", 
+      "down": "⬇️", 
+      "left": "⬅️", 
+      "right": "➡️", 
+      "leave": "我不玩了"
+    },
+    "endMessages": {
+      "win": "哞!<player>,你得到2048了!",
+      "lose": "哞!<player>,你輸了!",
+      "idle": "哞!遊戲結束,因為你在掛機!",
+      "stopped": "哞!這局遊戲被你手動結束了",
+      "deleted": "哞!遊戲板子被丟掉了,~~方塊掉出來了~~!",
+      "gameStats": {
+        "header": "遊戲資料 - <game>",
+        "message": "**時長**: <min>:<sec>\n**操作**: <step>"
+      },
+      "playerStats": {
+        "message": "哞!你不應該看到這句話!如果你看到了,請去跟AC0xRPFS001講說@hizollo/games有bug"
+      }
+    }
+  }
