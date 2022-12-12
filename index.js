@@ -280,9 +280,9 @@ ${toSuggest}`)
                 embed = new builders.EmbedBuilder()
                     .setTitle(`#${color}`)
                     .setColor(parseInt(`0x${color}`))
-                    .setImage(`https://dummyimage.com/250x250/${color}/000000.png&text=++`)
+                    .setImage(`https://singlecolorimage.com/get/${color}/250x250`)
             } catch (error) {
-                slash.reply({ content: '哞!這不是顏色!', ephemeral: true })
+                slash.reply({ content: '哞!API發生錯誤!', ephemeral: true })
                 return
             }
             slash.reply({ embeds: [embed] })
