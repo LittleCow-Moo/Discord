@@ -1,6 +1,7 @@
 # 牛牛Discord機器人
 哞!我是一個多功能的Discord機器人!
 ## 開發套件
+```
 discord.js@14
 @discordjs/builders
 dotenv
@@ -19,3 +20,4 @@ uuid
 lyrics-finder
 play-dl
 tweetnacl
+```
