@@ -88,7 +88,7 @@ setInterval(() => {
 
 const client = new Discord.Client({
   intents: ["Guilds", "GuildMembers", "GuildMessages"],
-  ws: { properties: { $browser: "Discord iOS" } },
+  ws: { properties: { $browser: "Discord Android" } },
   allowedMentions: { parse: [] },
 })
 client.login(process.env.Token)
@@ -149,6 +149,8 @@ client.on("ready", async () => {
     chalk.magenta(`
     █   █ ▀█▀ ▀█▀ █   █▀▀   █▀▀ █▀█ █ █ █
     █▄▄ █  █   █  █▄▄ ██▄   █▄▄ █▄█ ▀▄▀▄▀
+
+    https://github.com/LittleCow-moo/Discord
     `)
   )
   console.log(
