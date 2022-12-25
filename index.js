@@ -144,7 +144,7 @@ const coinButtonRow = new builders.ActionRowBuilder()
 
 client.on("ready", async () => {
   console.clear()
-  console.log(`${chalk.magenta("牛牛")} v0.3.5`)
+  console.log(`${chalk.magenta("牛牛")} v0.3.6`)
   console.log(
     chalk.magenta(`
     █   █ ▀█▀ ▀█▀ █   █▀▀   █▀▀ █▀█ █ █ █
@@ -290,7 +290,7 @@ ${toSuggest}`)
       })
       break
     case "botinfo":
-      const rendermsg = ["牛牛 v0.3.5"]
+      const rendermsg = ["牛牛 v0.3.6"]
       rendermsg.push(`伺服器數量:\`${client.guilds.cache.size}\``)
       rendermsg.push(`CPU型號:\`${so.cpus()[0].model}\``)
       rendermsg.push(`CPU使用量:\`${cpu.toString().slice(0, 4)}%\``)
@@ -353,6 +353,7 @@ ${toSuggest}`)
                   value: body.software || "查無資料",
                   inline: true,
                 })
+                .addFields({ name: '端口', value: (body.port || "查無資料"), inline: true })
               slash.editReply({
                 content: `哞!這是 \`${minecraftIp}\` 的資訊:`,
                 embeds: [dataembed],
@@ -367,31 +368,13 @@ ${toSuggest}`)
               body = JSON.parse(body)
               if (!body.online)
                 return slash.editReply({ content: "哞!伺服器沒開!" })
-              const dataembed = new builders.EmbedBuilder()
-                .addFields({
-                  name: "MOTD",
-                  value: body.motd.clean.join("\n") || "查無資料",
-                  inline: true,
-                })
-                .addFields({
-                  name: "玩家數",
-                  value: [
-                    body.players.online || "查無資料",
-                    "/",
-                    body.players.max || "查無資料",
-                  ].join(""),
-                  inline: true,
-                })
-                .addFields({
-                  name: "版本",
-                  value: body.version || "查無資料",
-                  inline: true,
-                })
-                .addFields({
-                  name: "軟體",
-                  value: body.software || "查無資料",
-                  inline: true,
-                })
+                const dataembed = new builders.EmbedBuilder()
+                .addFields({ name: 'MOTD', value: body.motd.clean.join('\n') || "查無資料", inline: true })
+                .addFields({ name: '玩家數', value: [body.players.online || "查無資料", '/', body.players.max || "查無資料"].join(''), inline: true })
+                .addFields({ name: '版本', value: (body.version || "查無資料"), inline: true })
+                .addFields({ name: '協議版本', value: (body.protocol || "查無資料"), inline: true })
+                .addFields({ name: '軟體', value: (body.software || "查無資料"), inline: true })
+                .addFields({ name: '端口', value: (body.port || "查無資料"), inline: true })
                 .setThumbnail(`https://api.mcsrvstat.us/icon/${minecraftIp}`)
               slash.editReply({
                 content: `哞!這是 \`${minecraftIp}\` 的資訊:`,
@@ -473,11 +456,9 @@ ${toSuggest}`)
         embed = new builders.EmbedBuilder()
           .setTitle(`#${color}`)
           .setColor(parseInt(`0x${color}`))
-          .setImage(
-            `https://dummyimage.com/250x250/${color}/000000.png&text=++`
-          )
+          .setImage(`https://singlecolorimage.com/get/${color}/250x250`)
       } catch (error) {
-        slash.reply({ content: "哞!這不是顏色!", ephemeral: true })
+        slash.reply({ content: '哞!API發生錯誤!', ephemeral: true })
         return
       }
       slash.reply({ embeds: [embed] })
