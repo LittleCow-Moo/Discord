@@ -114,6 +114,12 @@ const options = [
         .setDescription('尋找某首歌的歌詞!')
         .setValue('lyrics')
         .setEmoji({ id: '1009247448738316319' })
+        .toJSON(),
+    option
+        .setLabel('查詢地震')
+        .setDescription('查詢最近的地震!')
+        .setValue('earthquake')
+        .setEmoji({ id: '1053482212328222810' })
         .toJSON()
 ]
 
