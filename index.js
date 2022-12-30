@@ -3,6 +3,7 @@ require("dotenv").config()
 if (process.env.EggactylCompatibleMode) {
   process.stdout.write('\x1Bc')
   const myRL = require("serverline")
+  var shortUrl = require("node-url-shortener");
   myRL.init()
   myRL.setCompletion(["stop"])
   myRL.setPrompt("​")
