@@ -283,7 +283,7 @@ ${toSuggest}`)
           })
         }
         slash.editReply({
-          content: `哞!你的短網址: \`${JSON.parse(body)["url"]}\``,
+          content: `哞!你的短網址: \`https://ulink.gq/${target}\``,
           ephemeral: false,
         })
       })
