@@ -272,10 +272,7 @@ ${toSuggest}`)
       if (!(toShort.startsWith("http://") || toShort.startsWith("https://")))
         return slash.reply({ content: "哞!這不是網址!", ephemeral: true })
       const datas = {
-        url: "https://mooshort.repl.co/api/create",
-        form: {
-          url: toShort,
-        },
+        url: `https://ulink.gq/api?long="${toshort}"&short="${target}"`,
       }
       slash.deferReply({ ephemeral: true })
       request.post(datas, (err, res, body) => {
@@ -401,7 +398,7 @@ ${toSuggest}`)
       const tofeGame = new tofe({
         source: slash,
         players: [slash.user],
-        strings: require("./translates/2048.json"),
+        strings: require("./translates/zh-tw/2048.json"),
       })
       await tofeGame.initialize()
       await tofeGame.start()
