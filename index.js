@@ -3,7 +3,6 @@ require("dotenv").config()
 if (process.env.EggactylCompatibleMode) {
   process.stdout.write('\x1Bc')
   const myRL = require("serverline")
-  var shortUrl = require("node-url-shortener");
   myRL.init()
   myRL.setCompletion(["stop"])
   myRL.setPrompt("​")
@@ -29,6 +28,7 @@ const screenshot = require("discord-screenshot")
 const chalk = require("chalk")
 const DiscordGame = require("discord-games-beta")
 const { DjsTofe: tofe } = require("@hizollo/games")
+const short = require("shortlib")
 const game = new DiscordGame(process.env.Token, "youtube", 2, {
   neverExpire: false,
 })
@@ -272,17 +272,9 @@ ${toSuggest}`)
       const toShort = slash.options.getString("url")
       if (!(toShort.startsWith("http://") || toShort.startsWith("https://")))
         return slash.reply({ content: "哞!這不是網址!", ephemeral: true })
-      const datas = {
-        url: `https://ulink.gq/api?long="${toshort}"&short="${target}"`,
-      }
+      
       slash.deferReply({ ephemeral: true })
-      request.post(datas, (err, res, body) => {
-        if (err) {
-          return slash.editReply({
-            content: `:flushed: 哞!發生錯誤!`,
-            ephemeral: true,
-          })
-        }
+      short.tnyim(toShort).then(target=>{
         slash.editReply({
           content: `哞!你的短網址: \`https://ulink.gq/${target}\``,
           ephemeral: false,
