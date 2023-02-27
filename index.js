@@ -29,6 +29,7 @@ const chalk = require("chalk")
 const DiscordGame = require("discord-games-beta")
 const { DjsTofe: tofe } = require("@hizollo/games")
 const short = require("shortlib")
+const mcsrv = require("mcsrv")
 const game = new DiscordGame(process.env.Token, "youtube", 2, {
   neverExpire: false,
 })
@@ -309,9 +310,7 @@ ${toSuggest}`)
       slash.deferReply()
       switch (minecraftType) {
         case "bedrock":
-          request(
-            `https://api.mcsrvstat.us/bedrock/2/${minecraftIp}`,
-            (error, response, body) => {
+          mcsrv("../bedrock/2/"+minecraftIp).then(body) => {
               body = JSON.parse(body)
               if (!body.online)
                 return slash.editReply({ content: "哞!伺服器沒開!" })
@@ -354,9 +353,7 @@ ${toSuggest}`)
           )
           break
         case "java":
-          request(
-            `https://api.mcsrvstat.us/2/${minecraftIp}`,
-            (error, response, body) => {
+          mcsrv(minecraftIp).then(body => {
               body = JSON.parse(body)
               if (!body.online)
                 return slash.editReply({ content: "哞!伺服器沒開!" })
