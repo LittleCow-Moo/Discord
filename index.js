@@ -180,11 +180,7 @@ client.on("interactionCreate", async (slash) => {
       slash.reply({ embeds: [help], components: [helpRow] })
       break
     case "haha":
-      slash.reply("哞!讓我想想...")
-      await delay(rnum(1000, 3000))
-      slash.followUp("啊!我想到了!")
-      await delay(200)
-      slash.followUp(hahalist[rnum(1, hahalist.length) - 1])
+      slash.reply(hahalist[rnum(1, hahalist.length) - 1])
       break
     case "coin":
       slash.reply({
