@@ -306,7 +306,7 @@ ${toSuggest}`)
       slash.deferReply()
       switch (minecraftType) {
         case "bedrock":
-          mcsrv("../bedrock/2/"+minecraftIp).then(body) => {
+          mcsrv("../bedrock/2/"+minecraftIp).then((body) => {
               body = JSON.parse(body)
               if (!body.online)
                 return slash.editReply({ content: "哞!伺服器沒開!" })
