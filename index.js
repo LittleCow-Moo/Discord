@@ -307,7 +307,7 @@ ${toSuggest}`);
       switch (minecraftType) {
         case "bedrock":
           mcsrv("../bedrock/2/" + minecraftIp).then((body) => {
-            body = JSON.parse(body);
+            
             if (!body.online)
               return slash.editReply({ content: "哞!伺服器沒開!" });
             const dataembed = new builders.EmbedBuilder()
@@ -353,7 +353,7 @@ ${toSuggest}`);
           break;
         case "java":
           mcsrv(minecraftIp).then((body) => {
-            body = JSON.parse(body);
+            
             if (!body.online)
               return slash.editReply({ content: "哞!伺服器沒開!" });
             const dataembed = new builders.EmbedBuilder()
@@ -500,7 +500,7 @@ ${toSuggest}`);
         }`,
         (error, response, body) => {
           body = JSON.parse(body);
-          const locmap = `https://www.google.com/maps/search/?api=1&query=${body.records.Earthquake[0].Epicenter.EpicenterLatitude},${body.records.Earthquake[0].Epicenter.EpicenterLongitude}`;
+          const locmap = `https://www.google.com/maps/search/?api=1&query=${body.records.Earthquake[0].EarthquakeInfo.Epicenter.EpicenterLatitude},${body.records.Earthquake[0].EarthquakeInfo.Epicenter.EpicenterLongitude}`;
           let biggestinte = [];
           body.records.Earthquake[0].Intensity.ShakingArea.forEach((area) => {
             biggestinte.push(`${area.CountyName}最大${area.AreaIntensity}`);
