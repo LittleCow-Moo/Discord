@@ -32,6 +32,8 @@
     "lyrics-finder": "latest",
     "play-dl": "latest",
     "tweetnacl": "latest",
-    "serverline": "latest"
+    "serverline": "latest",
+    "shortlib": "latest",
+    "mcsrv": "latest"
   }
 }
