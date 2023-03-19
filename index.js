@@ -146,7 +146,7 @@ const coinButtonRow = new builders.ActionRowBuilder()
 
 client.on("ready", async () => {
   console.clear();
-  console.log(`${chalk.magenta("牛牛")} v0.3.6`);
+  console.log(`${chalk.magenta("牛牛")} v0.3.7`);
   console.log(
     chalk.magenta(`
     █   █ ▀█▀ ▀█▀ █   █▀▀   █▀▀ █▀█ █ █ █
@@ -279,7 +279,7 @@ ${toSuggest}`);
       });
       break;
     case "botinfo":
-      const rendermsg = ["牛牛 v0.3.6"];
+      const rendermsg = ["牛牛 v0.3.7"];
       rendermsg.push(`伺服器數量:\`${client.guilds.cache.size}\``);
       rendermsg.push(`CPU型號:\`${so.cpus()[0].model}\``);
       rendermsg.push(`CPU使用量:\`${cpu.toString().slice(0, 4)}%\``);
@@ -307,7 +307,6 @@ ${toSuggest}`);
       switch (minecraftType) {
         case "bedrock":
           mcsrv("../bedrock/2/" + minecraftIp).then((body) => {
-            
             if (!body.online)
               return slash.editReply({ content: "哞!伺服器沒開!" });
             const dataembed = new builders.EmbedBuilder()
@@ -353,7 +352,6 @@ ${toSuggest}`);
           break;
         case "java":
           mcsrv(minecraftIp).then((body) => {
-            
             if (!body.online)
               return slash.editReply({ content: "哞!伺服器沒開!" });
             const dataembed = new builders.EmbedBuilder()
@@ -496,7 +494,7 @@ ${toSuggest}`);
       //反正這不是我的API Key 不放.env沒差啦.w.
       request(
         `https://opendata.cwb.gov.tw/api/v1/rest/datastore/E-A0015-001?Authorization=rdec-key-123-45678-011121314&limit=1&format=JSON&offset=${
-          eqIndex + 1
+          eqIndex - 1
         }`,
         (error, response, body) => {
           body = JSON.parse(body);
@@ -530,8 +528,10 @@ ${toSuggest}`);
             })
             .addFields({
               name: "芮氏規模",
-              value:
-                String(body.records.Earthquake[0].EarthquakeInfo.EarthquakeMagnitude.MagnitudeValue),
+              value: String(
+                body.records.Earthquake[0].EarthquakeInfo.EarthquakeMagnitude
+                  .MagnitudeValue
+              ),
               inline: true,
             })
             .addFields({
