@@ -319,9 +319,9 @@ ${toSuggest}`);
               .addFields({
                 name: "玩家數",
                 value: [
-                  body.players.online || "查無資料",
+                  String(body.players.online) || "查無資料",
                   "/",
-                  body.players.max || "查無資料",
+                  String(body.players.max) || "查無資料",
                 ].join(""),
                 inline: true,
               })
@@ -342,7 +342,7 @@ ${toSuggest}`);
               })
               .addFields({
                 name: "端口",
-                value: body.port || "查無資料",
+                value: Strimg(body.port) || "查無資料",
                 inline: true,
               });
             slash.editReply({
@@ -365,9 +365,9 @@ ${toSuggest}`);
               .addFields({
                 name: "玩家數",
                 value: [
-                  body.players.online || "查無資料",
+                  String(body.players.online) || "查無資料",
                   "/",
-                  body.players.max || "查無資料",
+                  String(body.players.max) || "查無資料",
                 ].join(""),
                 inline: true,
               })
@@ -378,7 +378,7 @@ ${toSuggest}`);
               })
               .addFields({
                 name: "協議版本",
-                value: body.protocol || "查無資料",
+                value: String(body.protocol) || "查無資料",
                 inline: true,
               })
               .addFields({
@@ -388,7 +388,7 @@ ${toSuggest}`);
               })
               .addFields({
                 name: "端口",
-                value: body.port || "查無資料",
+                value: String(body.port) || "查無資料",
                 inline: true,
               })
               .setThumbnail(`https://api.mcsrvstat.us/icon/${minecraftIp}`);
@@ -531,7 +531,7 @@ ${toSuggest}`);
             .addFields({
               name: "芮氏規模",
               value:
-                body.records.Earthquake[0].EarthquakeInfo.MagnitudeValue.toString(),
+                String(body.records.Earthquake[0].EarthquakeInfo.EarthquakeMagnitude.MagnitudeValue),
               inline: true,
             })
             .addFields({
