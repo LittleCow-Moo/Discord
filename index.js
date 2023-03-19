@@ -536,7 +536,7 @@ ${toSuggest}`);
             })
             .addFields({
               name: "震央",
-              value: `${body.records.Earthquake[0].Epicenter.Location}\n[在Google地圖上查看](${locmap})`,
+              value: `${body.records.Earthquake[0].EarthquakeInfo.Epicenter.Location}\n[在Google地圖上查看](${locmap})`,
               inline: true,
             })
             .addFields({ name: "最大震度", value: biggestinte, inline: true })
