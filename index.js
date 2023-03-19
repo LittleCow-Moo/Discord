@@ -342,7 +342,7 @@ ${toSuggest}`);
               })
               .addFields({
                 name: "端口",
-                value: Strimg(body.port) || "查無資料",
+                value: String(body.port) || "查無資料",
                 inline: true,
               });
             slash.editReply({
