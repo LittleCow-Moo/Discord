@@ -1,0 +1,39 @@
+{
+  "name": "littlecow",
+  "description": "哞!我是一個多功能的Discord機器人!",
+  "version": "0.3.6",
+  "scripts": {
+    "start": "node ."
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/LittleCow-moo/Discord.git"
+  },
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/LittleCow-moo/Discord/issues"
+  },
+  "dependencies": {
+    "discord.js": "14.x",
+    "@discordjs/builders": "latest",
+    "dotenv": "latest",
+    "moment": "latest",
+    "request": "latest",
+    "koa": "latest",
+    "os-utils": "latest",
+    "discord-screenshot": "latest",
+    "chalk": "4.x",
+    "discord-games-beta": "latest",
+    "@discordjs/voice": "latest",
+    "@hizollo/games": "latest",
+    "xml-js": "latest",
+    "easy-json-database": "latest",
+    "uuid": "latest",
+    "lyrics-finder": "latest",
+    "play-dl": "latest",
+    "tweetnacl": "latest",
+    "serverline": "latest",
+    "shortlib": "latest",
+    "mcsrv": "latest"
+  }
+}
