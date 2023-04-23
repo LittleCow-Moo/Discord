@@ -77,6 +77,7 @@ const alphlist = [
   "🇾",
   "🇿",
 ]
+var timerDB = []
 
 var cpu
 os.cpuUsage((v) => {
@@ -273,7 +274,7 @@ ${toSuggest}`)
       slash.deferReply({ ephemeral: true })
       short.tnyim(toShort).then((target) => {
         slash.editReply({
-          content: `哞!你的短網址: \`https://ulink.gq/${target}\``,
+          content: `哞!你的短網址: \`${target}\``,
           ephemeral: false,
         })
       })
@@ -549,6 +550,17 @@ ${toSuggest}`)
         }
       )
       break
+    case "timer":
+      const timerLength = slash.options.getString("time")
+      const timerTime = moment().add(
+        moment.duration("PT" + timerLength.toUpperCase())
+      )
+      timerDB.push({ send: slash.user.send, time: timerTime })
+      slash.reply({
+        content: `哞!你的計時器將在<t:${timerTime.unix()}:R>後響鈴!\n(注意:機器人一旦重啟，計時器就會失效了，~~所以祈禱機器人不要重啟吧~~)`,
+        ephemeral: true,
+      })
+      break
   }
 })
 client.on("interactionCreate", async (button) => {
@@ -719,6 +731,13 @@ client.on("messageCreate", (message) => {
       message.reply(balllist[ballnum])
       break
   }
+})
+setInterval(() => {
+  timerDB.forEach((timer) => {
+    if (timer.time == moment()) {
+      timer.send("哞!時間到!")
+    }
+  })
 })
 api.use((ctx) => {
   if (ctx.url != "/delay") return
