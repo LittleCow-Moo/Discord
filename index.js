@@ -30,6 +30,7 @@ const DiscordGame = require("discord-games-beta")
 const { DjsTofe: tofe } = require("@hizollo/games")
 const short = require("shortlib")
 const mcsrv = require("mcsrv")
+const cbmc = request("cbmc.js")
 const game = new DiscordGame(process.env.Token, "youtube", 2, {
   neverExpire: false,
 })

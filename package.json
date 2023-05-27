@@ -34,6 +34,7 @@
     "tweetnacl": "latest",
     "serverline": "latest",
     "shortlib": "latest",
-    "mcsrv": "latest"
+    "mcsrv": "latest",
+    "cbmc.js": "latest"
   }
 }
