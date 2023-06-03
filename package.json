@@ -35,6 +35,6 @@
     "serverline": "latest",
     "shortlib": "latest",
     "mcsrv": "latest",
-    "cbmc.js": "latest"
+    "cbmc-js": "latest"
   }
 }
