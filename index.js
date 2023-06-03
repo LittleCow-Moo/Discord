@@ -114,36 +114,38 @@ process.on("uncaughtException", (e) => {
     )}!\n${e}`
   )
 })
+const generateToggleButtonRow = (id) => {
+  const toggleButtonLeft = new builders.ButtonBuilder()
+    .setCustomId(`toggleButtonLeft-${id}`)
+    .setEmoji({ id: "1015401378367160384" })
+    .setLabel("​")
+    .setStyle(1)
 
-const toggleButtonLeft = new builders.ButtonBuilder()
-  .setCustomId("toggleButtonLeft")
-  .setEmoji({ id: "1015401378367160384" })
-  .setLabel("​")
-  .setStyle(1)
+  const toggleButtonRight = new builders.ButtonBuilder()
+    .setCustomId(`toggleButtonRight-${id}`)
+    .setEmoji({ id: "1015401048388665368" })
+    .setLabel("​")
+    .setStyle(1)
 
-const toggleButtonRight = new builders.ButtonBuilder()
-  .setCustomId("toggleButtonRight")
-  .setEmoji({ id: "1015401048388665368" })
-  .setLabel("​")
-  .setStyle(1)
+  return new builders.ActionRowBuilder()
+    .addComponents(toggleButtonLeft)
+    .addComponents(toggleButtonRight)
+}
+const generateCoinButtonRow = (id) => {
+  const coinButtonHead = new builders.ButtonBuilder()
+    .setCustomId(`coinButtonHead-${id}`)
+    .setLabel("正面")
+    .setStyle(3)
 
-const toggleButtonRow = new builders.ActionRowBuilder()
-  .addComponents(toggleButtonLeft)
-  .addComponents(toggleButtonRight)
+  const coinButtonTail = new builders.ButtonBuilder()
+    .setCustomId(`coinButtonTail-${id}`)
+    .setLabel("反面")
+    .setStyle(4)
 
-const coinButtonHead = new builders.ButtonBuilder()
-  .setCustomId("coinButtonHead")
-  .setLabel("正面")
-  .setStyle(3)
-
-const coinButtonTail = new builders.ButtonBuilder()
-  .setCustomId("coinButtonTail")
-  .setLabel("反面")
-  .setStyle(4)
-
-const coinButtonRow = new builders.ActionRowBuilder()
-  .addComponents(coinButtonHead)
-  .addComponents(coinButtonTail)
+  return new builders.ActionRowBuilder()
+    .addComponents(coinButtonHead)
+    .addComponents(coinButtonTail)
+}
 //#endregion
 
 client.on("ready", async () => {
@@ -187,7 +189,7 @@ client.on("interactionCreate", async (slash) => {
     case "coin":
       slash.reply({
         content: "哞!你要猜正面還是反面?",
-        components: [coinButtonRow],
+        components: [generateCoinButtonRow(slash.user.id)],
       })
       break
     case "say":
@@ -455,7 +457,7 @@ ${toSuggest}`)
             slash.editReply({
               content: "哞!這是第1頁",
               embeds: [embed],
-              components: [toggleButtonRow],
+              components: [generateToggleButtonRow(slash.user.id)],
             })
           }
         )
@@ -566,8 +568,9 @@ ${toSuggest}`)
 })
 client.on("interactionCreate", async (button) => {
   if (!button.isButton()) return
-  switch (button.customId) {
-    case "toggleButtonLeft":
+  switch (true) {
+    case /toggleButtonLeft-[^-][0-9]*/.test(button.customId):
+      if (button.user.id != button.customId.replace("toggleButtonLeft-")) return
       let nowPage = parseInt(
         button.message.content.split("哞!這是第")[1].split("頁")[0]
       )
@@ -611,7 +614,9 @@ client.on("interactionCreate", async (button) => {
         }
       )
       break
-    case "toggleButtonRight":
+    case /toggleButtonRight-[^-][0-9]*/.test(button.customId):
+      if (button.user.id != button.customId.replace("toggleButtonRight-"))
+        return
       let nowPageR = parseInt(
         button.message.content.split("哞!這是第")[1].split("頁")[0]
       )
@@ -656,23 +661,24 @@ client.on("interactionCreate", async (button) => {
         }
       )
       break
-    case "coinButtonHead":
-    case "coinButtonTail":
+    case /coinButtonHead-[^-][0-9]*/.test(button.customId):
+    case /coinButtonTail-[^-][0-9]*/.test(button.customId):
+      if (button.user.id != button.customId.split("-")[1]) return
       button.deferUpdate()
       const coinnum = rnum(1, 2)
-      if (coinnum == 1 && button.customId == "coinButtonHead")
+      if (coinnum == 1 && button.customId.startsWith("coinButtonHead-"))
         return button.message.edit({ content: "答對了!", components: [] })
-      if (coinnum == 1 && button.customId == "coinButtonTail")
+      if (coinnum == 1 && button.customId.startsWith("coinButtonTail-"))
         return button.message.edit({
           content: "錯了,是正面才對",
           components: [],
         })
-      if (coinnum == 2 && button.customId == "coinButtonHead")
+      if (coinnum == 2 && button.customId.startsWith("coinButtonHead-"))
         return button.message.edit({
           content: "錯了,是反面才對",
           components: [],
         })
-      if (coinnum == 2 && button.customId == "coinButtonTail")
+      if (coinnum == 2 && button.customId.startsWith("coinButtonTail-"))
         return button.message.edit({ content: "答對了!", components: [] })
       break
   }
