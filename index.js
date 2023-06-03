@@ -741,7 +741,7 @@ client.on("messageCreate", (message) => {
 })
 setInterval(() => {
   timerDB.forEach((timer) => {
-    if (timer.time == moment()) {
+    if (timer.time <= moment()) {
       timer.send("哞!時間到!")
     }
   })
