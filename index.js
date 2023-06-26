@@ -31,10 +31,17 @@ const { DjsTofe: tofe } = require("@hizollo/games")
 const short = require("shortlib")
 const mcsrv = require("mcsrv")
 const cbmc = request("cbmc-js")
+const lyricsFinder = require('lyrics-finder')
+function get_lyrics(artist, title) {
+  return new Promise(async (resolve,reject)=>{
+      let lyrics = await lyricsFinder(artist, title) || "哞!找不到歌詞!"
+      resolve(lyrics)
+  })
+}
 const game = new DiscordGame(process.env.Token, "youtube", 2, {
   neverExpire: false,
 })
-const helpRow = require("./help")
+const helpRow = require("./help.js")
 const hahalist = [
   "冰塊最想做什麼事?||退伍 因為他當冰很久了||",
   "有一天,我去吉野家,可是||吉野不在家||",
@@ -145,6 +152,24 @@ const generateCoinButtonRow = (id) => {
   return new builders.ActionRowBuilder()
     .addComponents(coinButtonHead)
     .addComponents(coinButtonTail)
+}
+const LyricThingys = {
+  artist:new builders.ActionRowBuilder()
+  .addComponents(new builders.TextInputBuilder()
+  .setLabel('歌手')
+  .setCustomId('artist')
+  .setMaxLength(30)
+  .setStyle(1)
+  .setMinLength(2)
+  .setRequired(true)),
+  songname:new builders.ActionRowBuilder()
+  .addComponents(new builders.TextInputBuilder()
+  .setLabel('歌曲名稱')
+  .setCustomId('songname')
+  .setMaxLength(30)
+  .setStyle(1)
+  .setMinLength(2)
+  .setRequired(true))
 }
 //#endregion
 
