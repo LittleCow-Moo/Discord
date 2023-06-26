@@ -177,7 +177,7 @@ client.on("interactionCreate", async (slash) => {
       const help = new builders.EmbedBuilder()
         .setColor(0xff00a7)
         .setTitle("牛牛幫助")
-        .setDescription("哞!我是牛牛,一隻很簡單的機器牛。\n目前有下列功能:")
+        .setDescription("哞!我是牛牛,一隻很簡單的機器牛。\n目前有下列指令:")
         .setThumbnail(
           "https://cdn.discordapp.com/attachments/858984158620286998/982933401919184926/ec51f3aed0943f79239a05124e863dd5.webp"
         )
@@ -681,6 +681,99 @@ client.on("interactionCreate", async (button) => {
         })
       if (coinnum == 2 && button.customId.startsWith("coinButtonTail-"))
         return button.message.edit({ content: "答對了!", components: [] })
+      break
+  }
+})
+client.on("interactionCreate", async (select) => {
+  if (!select.isSelectMenu) return
+  if (select.customId != "features") return
+  const embed = new Discord.MessageEmbed()
+    .setColor("#ff00a7")
+    .setTitle(require("./help.json")[select.values[0]]["name"])
+    .setDescription(require("./help.json")[select.values[0]]["desc"])
+    .setThumbnail(
+      "https://cdn.discordapp.com/attachments/858984158620286998/982933401919184926/ec51f3aed0943f79239a05124e863dd5.webp"
+    )
+    .setImage(`https://cowhelpcdn.cowteam.repl.co/${select.values[0]}.png`)
+  select.reply({ embeds: [embed], ephemeral: true })
+})
+client.on("interactionCreate", async (click) => {
+  if (!click.isButton) return
+  if (click.customId != "searchLyrics") return
+  try {
+    click.showModal(
+      new Discord.Modal({ customId: "searchLyric", title: "尋找歌詞" }, client)
+        .addComponents(LyricThingys.artist.toJSON())
+        .addComponents(LyricThingys.songname.toJSON())
+    )
+    const filter = (interaction) => interaction.customId === "searchLyric"
+    click.awaitModalSubmit({ filter, time: 15_000 }).then((modal) => {
+      modal.deferReply()
+      get_lyrics(
+        modal.fields.getTextInputValue("artist"),
+        modal.fields.getTextInputValue("songname")
+      ).then((lyrics) => {
+        const toSend =
+          lyrics != "哞!找不到歌詞!"
+            ? {
+                files: [
+                  new Discord.MessageAttachment(
+                    Buffer.from(lyrics),
+                    "lyrics.txt"
+                  ),
+                ],
+              }
+            : lyrics
+        modal.editReply(toSend)
+      })
+    })
+  } catch (err) {
+    click.channel.send("哞!尋找歌詞時出問題了!請將表單關掉,並且再打開一次!")
+  }
+})
+client.on("interactionCreate", async (context) => {
+  if (!context.isContextMenu) return
+  switch (context.commandName) {
+    case "頭貼":
+      if (typeof client.users.cache.get(context.targetId) != "undefined") {
+        context.reply({
+          content: `哞!這是 \`${
+            client.users.cache.get(context.targetId).tag
+          }\` 的頭貼:`,
+          files: [
+            `${client.users.cache
+              .get(context.targetId)
+              .avatarURL({ dynamic: true })}?size=4096`,
+          ],
+        })
+      } else {
+        context.reply(":flushed: 哞!我們目前還無法取得Nitro使用者的資訊!")
+      }
+      break
+    case "投票":
+      context.channel.messages.fetch(context.targetId).then((polling) => {
+        context.channel.send(polling.content).then((pollmsg) => {
+          pollmsg.react("👍")
+          pollmsg.react("👎")
+        })
+      })
+      context.reply({ content: "哞!投票已傳送!", ephemeral: true })
+      break
+    case "網頁截圖":
+      context.channel.messages.fetch(context.targetId).then(async (shoting) => {
+        shoting = shoting.content
+        if (
+          !(shoting.startsWith("http://") || shoting.startsWith("https://"))
+        ) {
+          return context.reply({ content: "哞!這不是網址!", ephemeral: true })
+        }
+        context.deferReply()
+        const result = await screenshot.screenshot(shoting)
+        context.editReply({
+          content: `哞!這是 \`${shoting}\` 的截圖:`,
+          files: [result],
+        })
+      })
       break
   }
 })
