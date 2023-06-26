@@ -271,11 +271,12 @@ ${toSuggest}`)
       break
     case "shortlink":
       const toShort = slash.options.getString("url")
+      const shortType = slash.options.getString("type") || "tnyim"
       if (!(toShort.startsWith("http://") || toShort.startsWith("https://")))
         return slash.reply({ content: "哞!這不是網址!", ephemeral: true })
 
       slash.deferReply({ ephemeral: true })
-      short.tnyim(toShort).then((target) => {
+      short[shortType](toShort).then((target) => {
         slash.editReply({
           content: `哞!你的短網址: \`${target}\``,
           ephemeral: false,
@@ -283,7 +284,7 @@ ${toSuggest}`)
       })
       break
     case "botinfo":
-      const rendermsg = ["牛牛 v0.3.7"]
+      const rendermsg = ["牛牛 v0.3.8"]
       rendermsg.push(`伺服器數量:\`${client.guilds.cache.size}\``)
       rendermsg.push(`CPU型號:\`${so.cpus()[0].model}\``)
       rendermsg.push(`CPU使用量:\`${cpu.toString().slice(0, 4)}%\``)
