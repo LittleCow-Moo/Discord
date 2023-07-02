@@ -31,11 +31,11 @@ const { DjsTofe: tofe } = require("@hizollo/games")
 const short = require("shortlib")
 const mcsrv = require("mcsrv")
 const cbmc = request("cbmc-js")
-const lyricsFinder = require('lyrics-finder')
+const lyricsFinder = require("lyrics-finder")
 function get_lyrics(artist, title) {
-  return new Promise(async (resolve,reject)=>{
-      let lyrics = await lyricsFinder(artist, title) || "哞!找不到歌詞!"
-      resolve(lyrics)
+  return new Promise(async (resolve, reject) => {
+    let lyrics = (await lyricsFinder(artist, title)) || "哞!找不到歌詞!"
+    resolve(lyrics)
   })
 }
 const game = new DiscordGame(process.env.Token, "youtube", 2, {
@@ -154,22 +154,24 @@ const generateCoinButtonRow = (id) => {
     .addComponents(coinButtonTail)
 }
 const LyricThingys = {
-  artist:new builders.ActionRowBuilder()
-  .addComponents(new builders.TextInputBuilder()
-  .setLabel('歌手')
-  .setCustomId('artist')
-  .setMaxLength(30)
-  .setStyle(1)
-  .setMinLength(2)
-  .setRequired(true)),
-  songname:new builders.ActionRowBuilder()
-  .addComponents(new builders.TextInputBuilder()
-  .setLabel('歌曲名稱')
-  .setCustomId('songname')
-  .setMaxLength(30)
-  .setStyle(1)
-  .setMinLength(2)
-  .setRequired(true))
+  artist: new builders.ActionRowBuilder().addComponents(
+    new builders.TextInputBuilder()
+      .setLabel("歌手")
+      .setCustomId("artist")
+      .setMaxLength(30)
+      .setStyle(1)
+      .setMinLength(2)
+      .setRequired(true)
+  ),
+  songname: new builders.ActionRowBuilder().addComponents(
+    new builders.TextInputBuilder()
+      .setLabel("歌曲名稱")
+      .setCustomId("songname")
+      .setMaxLength(30)
+      .setStyle(1)
+      .setMinLength(2)
+      .setRequired(true)
+  ),
 }
 //#endregion
 
@@ -589,6 +591,19 @@ ${toSuggest}`)
         content: `哞!你的計時器將在<t:${timerTime.unix()}:R>後響鈴!\n(注意:機器人一旦重啟，計時器就會失效了，~~所以祈禱機器人不要重啟吧~~)`,
         ephemeral: true,
       })
+      break
+    case "cbmc":
+      const postIndex = slash.options.getString("index") || 1
+      slash.deferReply()
+      const postList = await cbmc.getPostList(postIndex)
+      if (postList) {
+        const post = postList.posts[String(cbmcIndex)].post
+        const postEmbed = new builders.EmbedBuilder()
+          .setTitle(`${post.type}${post.id.post}`)
+          .setDescription(post.content)
+          .setColor(0xff00a7)
+          slash.editReply({embeds: [postEmbed]})
+      }
       break
   }
 })
