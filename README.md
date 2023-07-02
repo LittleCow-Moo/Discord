@@ -28,4 +28,5 @@ uuid
 lyrics-finder
 play-dl
 tweetnacl
+cbmc-js
 ```
