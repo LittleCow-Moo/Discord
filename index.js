@@ -269,13 +269,18 @@ ${toSuggest}`)
         })
       slash.reply({ content: "哞!傳送成功!", ephemeral: true })
       break
-    case "avatar":
-      const toAvatar = slash.options.getUser("user")
-      slash.reply({
-        content: `哞!這是 \`${toAvatar.tag}\` 的頭貼:`,
-        files: [toAvatar.displayAvatarURL({ size: 4096, format: "png" })],
-      })
-      break
+      case "avatar":
+        const toAvatar = slash.options.getUser("user");
+        let tag = toAvatar.tag;
+        if (toAvatar.discriminator === "0") {
+          tag = tag.slice(0, -2); // 移除 #0
+        }
+        slash.reply({
+          content: `哞!這是 \`${tag}\` 的頭貼:`,
+          files: [toAvatar.displayAvatarURL({ size: 4096, format: "png" })],
+        });
+        break;
+      
     case "time":
       slash.reply(`哞!現在的時間是:<t:${Math.floor(+new Date() / 1000)}:F>`)
       break
