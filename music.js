@@ -33,71 +33,124 @@ client.on("ready", () => {
   play.setToken({ soundcloud: { client_id: process.env.SoundCloudClientID } })
 })
 
+const searchSong = async (query) => {
+  try {
+    const results = await play.search(query, { limit: 1 })
+    return results[0]
+  } catch (error) {
+    console.error(`搜尋歌曲時發生錯誤: ${error}`)
+    throw error
+  }
+}
+
+const addToQueue = async (guildId, song) => {
+  if (!queues[guildId]) queues[guildId] = []
+  queues[guildId].push(song)
+}
+
+const playSong = async (guildId, song) => {
+  const connection = connections[guildId]
+  const searched = await searchSong(song)
+
+  let stream
+  let resource
+  try {
+    const info = await play.stream(searched.url)
+    stream = info.stream
+    resource = createAudioResource(stream, { inputType: info.type })
+  } catch (error) {
+    console.error(`播放歌曲時發生錯誤: ${error}`)
+    throw error
+  }
+
+  const player = createAudioPlayer({
+    behaviors: {
+      noSubscriber: NoSubscriberBehavior.Play,
+    },
+  })
+  player.play(resource)
+
+  connection.subscribe(player)
+  players[guildId] = player
+
+  const eventChangeHandler = async (oldState, newState) => {
+    if (newState.status === "idle") {
+      queues[guildId].shift()
+      if (queues[guildId][0]) {
+        console.log(`✅ 哞!已播放完畢\n⏯️ 下一首: \`${queues[guildId][0]}\``)
+      } else {
+        console.log("✅ 哞!已播放完畢\n⏸️ 待播清單是空的!")
+      }
+      if (!queues[guildId][0]) return
+
+      try {
+        const nextSong = await searchSong(queues[guildId][0])
+        const nextInfo = await play.stream(nextSong.url)
+        const nextStream = nextInfo.stream
+        const nextResource = createAudioResource(nextStream, {
+          inputType: nextInfo.type,
+        })
+
+        const nextPlayer = createAudioPlayer({
+          behaviors: {
+            noSubscriber: NoSubscriberBehavior.Play,
+          },
+        })
+        nextPlayer.play(nextResource)
+        players[guildId] = nextPlayer
+        connections[guildId].subscribe(nextPlayer)
+        nextPlayer.addListener("stateChange", eventChangeHandler)
+      } catch (error) {
+        console.error(`播放下一首歌曲時發生錯誤: ${error}`)
+        throw error
+      }
+    }
+  }
+
+  player.addListener("stateChange", eventChangeHandler)
+}
+
 client.on("interactionCreate", async (slash) => {
   if (!slash.isCommand()) return
-  if (slash.commandName != "moo") return
+  if (slash.commandName !== "moo") return
+
   const sub = slash.options.getSubcommand()
-  if (sub == "play") {
+
+  if (sub === "play") {
     if (!slash.member.voice?.channel)
       return slash.reply("❌ 哞!請先加入一個語音頻道!")
-    if (!queues[slash.guild.id]) queues[slash.guild.id] = []
-    if (queues[slash.guild.id][0]) {
-      const searched = await play.search(
-        slash.options.get("query", false).value,
-        { source: { soundcloud: "tracks" } }
-      )
-      queues[slash.guild.id][queues[slash.guild.id].length] = slash.options
-        .get("query", false)
-        .value.startsWith("http")
-        ? {
-            name: slash.options.get("query", false).value,
-            url: slash.options.get("query", false).value,
-          }
-        : { name: searched[0].name, url: searched[0].url }
-      return slash.reply(
-        `✅ 哞!已將 \`${
-          slash.options.get("query", false).value.startsWith("http")
-            ? slash.options.get("query", false).value
-            : searched[0].name
-        }\` 加到待播清單!`
-      )
+
+    const query = slash.options.get("query", false).value
+    try {
+      await addToQueue(slash.guild.id, query)
+      slash.reply(`✅ 哞!已將 \`${query}\` 加到待播清單!`)
+    } catch (error) {
+      console.error(`將歌曲加入待播清單時發生錯誤: ${error}`)
+      slash.reply("❌ 哞!將歌曲加入待播清單時發生錯誤!")
     }
-    slash.deferReply()
-    const connection = joinVoiceChannel({
-      channelId: slash.member.voice.channel.id,
-      guildId: slash.guild.id,
-      adapterCreator: slash.guild.voiceAdapterCreator,
-    })
-    connections[slash.guild.id] = connection
 
-    let args = slash.options.get("query", false).value
-    queues[slash.guild.id][0] = args
-    const searched = await play.search(args, {
-      source: { soundcloud: "tracks" },
-    })
-    let so_info = await play.soundcloud(
-      args.startsWith("http") ? args : searched[0].url
-    )
-    let stream = await play.stream_from_info(so_info, { quality: 2 })
+    if (!players[slash.guild.id]) {
+      slash.deferReply()
 
-    let resource = createAudioResource(stream.stream, {
-      inputType: stream.type,
-    })
+      const connection = joinVoiceChannel({
+        channelId: slash.member.voice.channel.id,
+        guildId: slash.guild.id,
+        adapterCreator: slash.guild.voiceAdapterCreator,
+      })
+      connections[slash.guild.id] = connection
 
-    let player = createAudioPlayer({
-      behaviors: {
-        noSubscriber: NoSubscriberBehavior.Play,
-      },
-    })
-    player.play(resource)
+      try {
+        const song = queues[slash.guild.id][0]
+        await playSong(slash.guild.id, song)
 
-    connection.subscribe(player)
-    players[slash.guild.id] = player
-    slash.editReply(
-      `▶️ 哞!正在播放: \`${
-        args.startsWith("http") ? args : searched[0].name
-      }\`\n<:stage:981552077098602517> 如果你在舞台頻道內播放音樂,請管理員邀請我成為發言者!`
-    )
+        slash.editReply(
+          `▶️ 哞!正在播放: \`${song}\`\n<:stage:981552077098602517> 如果你在舞台頻道內播放音樂,請管理員邀請我成為發言者!`
+        )
+      } catch (error) {
+        console.error(`播放歌曲時發生錯誤: ${error}`)
+        slash.editReply("❌ 哞!播放歌曲時發生錯誤!")
+      }
+    }
     const EventChangeHandler = async (oldOne, newOne) => {
       if (newOne.status == "idle") {
         queues[slash.guild.id].splice(0, 1)
