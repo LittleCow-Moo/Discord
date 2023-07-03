@@ -269,18 +269,18 @@ ${toSuggest}`)
         })
       slash.reply({ content: "哞!傳送成功!", ephemeral: true })
       break
-      case "avatar":
-        const toAvatar = slash.options.getUser("user");
-        let tag = toAvatar.tag;
-        if (toAvatar.discriminator === "0") {
-          tag = tag.slice(0, -2); // 移除 #0
-        }
-        slash.reply({
-          content: `哞!這是 \`${tag}\` 的頭貼:`,
-          files: [toAvatar.displayAvatarURL({ size: 4096, format: "png" })],
-        });
-        break;
-      
+    case "avatar":
+      const toAvatar = slash.options.getUser("user")
+      let tag = toAvatar.tag
+      if (toAvatar.discriminator === "0") {
+        tag = tag.slice(0, -2) // 移除 #0
+      }
+      slash.reply({
+        content: `哞!這是 \`${tag}\` 的頭貼:`,
+        files: [toAvatar.displayAvatarURL({ size: 4096, format: "png" })],
+      })
+      break
+
     case "time":
       slash.reply(`哞!現在的時間是:<t:${Math.floor(+new Date() / 1000)}:F>`)
       break
@@ -607,7 +607,7 @@ ${toSuggest}`)
           .setTitle(`${post.type}${post.id.post}`)
           .setDescription(post.content)
           .setColor(0xff00a7)
-          slash.editReply({embeds: [postEmbed]})
+        slash.editReply({ embeds: [postEmbed] })
       }
       break
   }
@@ -781,10 +781,12 @@ client.on("interactionCreate", async (context) => {
   switch (context.commandName) {
     case "頭貼":
       if (typeof client.users.cache.get(context.targetId) != "undefined") {
+        let tag = client.users.cache.get(context.targetId).tag
+        if (client.users.cache.get(context.targetId).discriminator === "0") {
+          tag = tag.slice(0, -2) // 移除 #0
+        }
         context.reply({
-          content: `哞!這是 \`${
-            client.users.cache.get(context.targetId).tag
-          }\` 的頭貼:`,
+          content: `哞!這是 \`${tag}\` 的頭貼:`,
           files: [
             `${client.users.cache
               .get(context.targetId)
@@ -792,7 +794,7 @@ client.on("interactionCreate", async (context) => {
           ],
         })
       } else {
-        context.reply(":flushed: 哞!我們目前還無法取得Nitro使用者的資訊!")
+        context.reply("哞!發生錯誤!")
       }
       break
     case "投票":
