@@ -156,7 +156,9 @@ client.on("interactionCreate", async (slash) => {
         queues[slash.guild.id].splice(0, 1)
         if (queues[slash.guild.id][0]) {
           slash.channel.send(
-            `✅ 哞！已播放完畢\n⏯️ 下一首： \`${queues[slash.guild.id][0].name}\``
+            `✅ 哞！已播放完畢\n⏯️ 下一首： \`${
+              queues[slash.guild.id][0].name
+            }\``
           )
         } else {
           slash.channel.send(`✅ 哞！已播放完畢\n⏸️ 待播清單是空的！`)
@@ -164,9 +166,7 @@ client.on("interactionCreate", async (slash) => {
         if (!queues[slash.guild.id][0]) return
         let stream
         let so_info
-        so_info = await play.soundcloud(
-            queues[slash.guild.id][0].url
-        )
+        so_info = await play.soundcloud(queues[slash.guild.id][0].url)
         stream = await play.stream_from_info(so_info, { quality: 2 })
 
         let resource = createAudioResource(stream.stream, {

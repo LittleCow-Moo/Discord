@@ -1,22 +1,28 @@
 {
-    "haha":{"name":"笑話","desc":"為你說一句笑話！"},
-    "coin":{"name":"猜硬幣","desc":"玩猜硬幣小遊戲！"},
-    "say":{"name":"說話","desc":"讓我一字不差的學你說話！"},
-    "suggest":{"name":"建議","desc":"告訴我你想到的新功能！"},
-    "poll":{"name":"投票","desc":"為你舉行一場投票！"},
-    "custompoll":{"name":"自訂投票","desc":"為你舉行一場自訂選項的投票！"},
-    "avatar":{"name":"頭貼","desc":"放大看某人的頭貼！"},
-    "time":{"name":"時間","desc":"看看現在的時間！"},
-    "screenshot":{"name":"網頁截圖","desc":"截圖某個網站！"},
-    "shortlink":{"name":"短網址","desc":"縮短你的網址！"},
-    "botinfo":{"name":"機器人資訊","desc":"查看關於我的資訊！"},
-    "delay":{"name":"延遲","desc":"測測看我的延遲！"},
-    "mcjava":{"name":"MC伺服/Java","desc":"查看關於某個Minecraft Java版伺服器的資訊！"},
-    "mcbedrock":{"name":"MC伺服/基岩","desc":"查看關於某個Minecraft 基岩版伺服器的資訊！"},
-    "youtube":{"name":"一起看YouTube","desc":"和你的朋友一起看YouTube！"},
-    "2048":{"name":"2048","desc":"玩2048遊戲！"},
-    "invoice":{"name":"發票兌獎","desc":"來看看你的發票有沒有中獎！"},
-    "color":{"name":"顏色","desc":"看看某個顏色！"},
-    "lyrics":{"name":"找歌詞","desc":"尋找某首歌的歌詞！"},
-    "earthquake":{"name":"查詢地震","desc":"查詢最近的地震！"}
+  "haha": { "name": "笑話", "desc": "為你說一句笑話！" },
+  "coin": { "name": "猜硬幣", "desc": "玩猜硬幣小遊戲！" },
+  "say": { "name": "說話", "desc": "讓我一字不差的學你說話！" },
+  "suggest": { "name": "建議", "desc": "告訴我你想到的新功能！" },
+  "poll": { "name": "投票", "desc": "為你舉行一場投票！" },
+  "custompoll": { "name": "自訂投票", "desc": "為你舉行一場自訂選項的投票！" },
+  "avatar": { "name": "頭貼", "desc": "放大看某人的頭貼！" },
+  "time": { "name": "時間", "desc": "看看現在的時間！" },
+  "screenshot": { "name": "網頁截圖", "desc": "截圖某個網站！" },
+  "shortlink": { "name": "短網址", "desc": "縮短你的網址！" },
+  "botinfo": { "name": "機器人資訊", "desc": "查看關於我的資訊！" },
+  "delay": { "name": "延遲", "desc": "測測看我的延遲！" },
+  "mcjava": {
+    "name": "MC伺服/Java",
+    "desc": "查看關於某個Minecraft Java版伺服器的資訊！"
+  },
+  "mcbedrock": {
+    "name": "MC伺服/基岩",
+    "desc": "查看關於某個Minecraft 基岩版伺服器的資訊！"
+  },
+  "youtube": { "name": "一起看YouTube", "desc": "和你的朋友一起看YouTube！" },
+  "2048": { "name": "2048", "desc": "玩2048遊戲！" },
+  "invoice": { "name": "發票兌獎", "desc": "來看看你的發票有沒有中獎！" },
+  "color": { "name": "顏色", "desc": "看看某個顏色！" },
+  "lyrics": { "name": "找歌詞", "desc": "尋找某首歌的歌詞！" },
+  "earthquake": { "name": "查詢地震", "desc": "查詢最近的地震！" }
 }

@@ -758,17 +758,16 @@ client.on("interactionCreate", async (click) => {
         modal.fields.getTextInputValue("artist"),
         modal.fields.getTextInputValue("songname")
       ).then((lyrics) => {
-        const toSend =
-          lyrics
-            ? {
-                files: [
-                  new Discord.MessageAttachment(
-                    Buffer.from(lyrics),
-                    "lyrics.txt"
-                  ),
-                ],
-              }
-            :  "哞！找不到歌詞！"
+        const toSend = lyrics
+          ? {
+              files: [
+                new Discord.MessageAttachment(
+                  Buffer.from(lyrics),
+                  "lyrics.txt"
+                ),
+              ],
+            }
+          : "哞！找不到歌詞！"
         modal.editReply(toSend)
       })
     })
@@ -869,7 +868,8 @@ client.on("messageCreate", (message) => {
           },
         },
         {
-          content: "哞！我接到球了！\n我把球丟給你\n你沒接到，你看起來很痛的樣子",
+          content:
+            "哞！我接到球了！\n我把球丟給你\n你沒接到，你看起來很痛的樣子",
           files: {
             name: "you_ko.png",
             data: "https://cowlinecdn.kiwichang.repl.co/ball/didi_ko.png",
