@@ -34,7 +34,7 @@ const cbmc = request("cbmc-js")
 const lyricsFinder = require("lyrics-finder")
 function get_lyrics(artist, title) {
   return new Promise(async (resolve, reject) => {
-    let lyrics = (await lyricsFinder(artist, title)) || "哞!找不到歌詞!"
+    let lyrics = (await lyricsFinder(artist, title)) || "哞！找不到歌詞！"
     resolve(lyrics)
   })
 }
@@ -116,9 +116,9 @@ const rnum = (a, b) => {
 
 process.on("uncaughtException", (e) => {
   console.log(
-    `${chalk.magenta("哞!")} ${chalk.green("指令系統")}發生了${chalk.red(
+    `${chalk.magenta("哞！")} ${chalk.green("指令系統")}發生了${chalk.red(
       "錯誤"
-    )}!\n${e}`
+    )}！\n${e}`
   )
 })
 const generateToggleButtonRow = (id) => {
@@ -187,9 +187,9 @@ client.on("ready", async () => {
     `)
   )
   console.log(
-    `${chalk.magenta("哞!")} ${chalk.green("指令系統")}已用 @${
+    `${chalk.magenta("哞！")} ${chalk.green("指令系統")}已用 @${
       client.user.tag
-    } 的身份登入!`
+    } 的身份登入！`
   )
   require("./music")
 })
@@ -204,7 +204,7 @@ client.on("interactionCreate", async (slash) => {
       const help = new builders.EmbedBuilder()
         .setColor(0xff00a7)
         .setTitle("牛牛幫助")
-        .setDescription("哞!我是牛牛,一隻很簡單的機器牛。\n目前有下列指令:")
+        .setDescription("哞！我是牛牛，一隻簡單的機器牛。\n目前有下列指令：")
         .setThumbnail(
           "https://cdn.discordapp.com/attachments/858984158620286998/982933401919184926/ec51f3aed0943f79239a05124e863dd5.webp"
         )
@@ -215,26 +215,26 @@ client.on("interactionCreate", async (slash) => {
       break
     case "coin":
       slash.reply({
-        content: "哞!你要猜正面還是反面?",
+        content: "哞！你要猜正面還是反面？",
         components: [generateCoinButtonRow(slash.user.id)],
       })
       break
     case "say":
       const toSend = slash.options.getString("text")
       slash.channel.send(toSend)
-      slash.reply({ content: "哞!傳送成功!", ephemeral: true })
+      slash.reply({ content: "哞！傳送成功！", ephemeral: true })
       break
     case "suggest":
       const toSuggest = slash.options.getString("text")
       const suggestEmbed = new builders.EmbedBuilder().setColor(0xffe153)
         .setDescription(`${slash.user.username} (${slash.user.id}) 
-從伺服器 ${slash.guild.name} (${slash.guild.id}) 傳來了新建議:
+從伺服器 ${slash.guild.name} (${slash.guild.id}) 傳來了新建議：
 ${toSuggest}`)
-      client.channels.cache.get("875529441147781130").send({
-        content: `哞!${slash.user.username}傳來了建議!詳細資料如下:`,
+      client.channels.cache.get(process.env.SuggestChannel).send({
+        content: `哞！${slash.user.username}傳來了建議!詳細資料如下：`,
         embeds: [suggestEmbed],
       })
-      slash.reply({ content: "哞!傳送成功!", ephemeral: true })
+      slash.reply({ content: "哞！傳送成功！", ephemeral: true })
       break
     case "poll":
       const toPoll = slash.options.getString("text")
@@ -242,7 +242,7 @@ ${toSuggest}`)
         pollMsg.react("👍")
         pollMsg.react("👎")
       })
-      slash.reply({ content: "哞!傳送成功!", ephemeral: true })
+      slash.reply({ content: "哞！傳送成功！", ephemeral: true })
       break
     case "custompoll":
       const toCustomPoll = slash.options.getString("text")
@@ -252,7 +252,7 @@ ${toSuggest}`)
         .join("​@")
       const pollopt = customPollOptions.split(";")
       if (pollopt.length > 20) {
-        slash.reply({ content: "哞!太多選項了!", ephemeral: true })
+        slash.reply({ content: "哞！太多選項了！", ephemeral: true })
         return
       }
       let pollemotes = []
@@ -267,7 +267,7 @@ ${toSuggest}`)
             custompoll.react(item)
           })
         })
-      slash.reply({ content: "哞!傳送成功!", ephemeral: true })
+      slash.reply({ content: "哞！傳送成功！", ephemeral: true })
       break
     case "avatar":
       const toAvatar = slash.options.getUser("user")
@@ -276,13 +276,13 @@ ${toSuggest}`)
         tag = tag.slice(0, -2) // 移除 #0
       }
       slash.reply({
-        content: `哞!這是 \`${tag}\` 的頭貼:`,
+        content: `哞！這是 \`${tag}\` 的頭貼：`,
         files: [toAvatar.displayAvatarURL({ size: 4096, format: "png" })],
       })
       break
 
     case "time":
-      slash.reply(`哞!現在的時間是:<t:${Math.floor(+new Date() / 1000)}:F>`)
+      slash.reply(`哞！現在的時間是：<t:${Math.floor(+new Date() / 1000)}:F>`)
       break
     case "screenshot":
       const toScreenshot = slash.options.getString("url")
@@ -292,12 +292,12 @@ ${toSuggest}`)
           toScreenshot.startsWith("https://")
         )
       ) {
-        return slash.reply({ content: "哞!這不是網址!", ephemeral: true })
+        return slash.reply({ content: "哞！這不是網址！", ephemeral: true })
       }
       slash.deferReply()
       const result = await screenshot.screenshot(toScreenshot)
       slash.editReply({
-        content: `哞!這是 \`${toScreenshot}\` 的截圖:`,
+        content: `哞！這是 \`${toScreenshot}\` 的截圖：`,
         files: [result],
       })
       break
@@ -305,35 +305,35 @@ ${toSuggest}`)
       const toShort = slash.options.getString("url")
       const shortType = slash.options.getString("type") || "tnyim"
       if (!(toShort.startsWith("http://") || toShort.startsWith("https://")))
-        return slash.reply({ content: "哞!這不是網址!", ephemeral: true })
+        return slash.reply({ content: "哞！這不是網址！", ephemeral: true })
 
       slash.deferReply({ ephemeral: true })
       short[shortType](toShort).then((target) => {
         slash.editReply({
-          content: `哞!你的短網址: \`${target}\``,
+          content: `哞！你的短網址： \`${target}\``,
           ephemeral: false,
         })
       })
       break
     case "botinfo":
       const rendermsg = ["牛牛 v0.3.8"]
-      rendermsg.push(`伺服器數量:\`${client.guilds.cache.size}\``)
-      rendermsg.push(`CPU型號:\`${so.cpus()[0].model}\``)
-      rendermsg.push(`CPU使用量:\`${cpu.toString().slice(0, 4)}%\``)
+      rendermsg.push(`伺服器數量：\`${client.guilds.cache.size}\``)
+      rendermsg.push(`CPU型號：\`${so.cpus()[0].model}\``)
+      rendermsg.push(`CPU使用量：\`${cpu.toString().slice(0, 4)}%\``)
       let tempTime = moment.duration(client.uptime)
-      let y = `${tempTime.hours()}時${tempTime.minutes()}分${tempTime.seconds()}秒`
+      let y = `${tempTime.hours()}小時${tempTime.minutes()}分鐘${tempTime.seconds()}秒`
       rendermsg.push(`已上線\`${y}\``)
       rendermsg.push(`於<t:${Math.floor(client.readyTimestamp / 1000)}:F>上線`)
       slash.reply(rendermsg.join("\n"))
       break
     case "delay":
       slash
-        .reply({ content: "哞!載入中...", fetchReply: true })
+        .reply({ content: "哞！載入中...", fetchReply: true })
         .then(async (repli) => {
           slash.editReply(
-            `哞!機器人延遲是:${
+            `哞！機器人延遲是：${
               repli.createdTimestamp - slash.createdTimestamp
-            }ms | API延遲是:${client.ws.ping}ms`
+            }ms | API延遲是：${client.ws.ping}ms`
           )
         })
       break
@@ -345,7 +345,7 @@ ${toSuggest}`)
         case "bedrock":
           mcsrv("../bedrock/2/" + minecraftIp).then((body) => {
             if (!body.online)
-              return slash.editReply({ content: "哞!伺服器沒開!" })
+              return slash.editReply({ content: "哞！伺服器沒開！" })
             const dataembed = new builders.EmbedBuilder()
               .addFields({
                 name: "名稱",
@@ -382,7 +382,7 @@ ${toSuggest}`)
                 inline: true,
               })
             slash.editReply({
-              content: `哞!這是 \`${minecraftIp}\` 的資訊:`,
+              content: `哞！這是 \`${minecraftIp}\` 的資訊：`,
               embeds: [dataembed],
             })
           })
@@ -390,7 +390,7 @@ ${toSuggest}`)
         case "java":
           mcsrv(minecraftIp).then((body) => {
             if (!body.online)
-              return slash.editReply({ content: "哞!伺服器沒開!" })
+              return slash.editReply({ content: "哞！伺服器沒開！" })
             const dataembed = new builders.EmbedBuilder()
               .addFields({
                 name: "MOTD",
@@ -428,7 +428,7 @@ ${toSuggest}`)
               })
               .setThumbnail(`https://api.mcsrvstat.us/icon/${minecraftIp}`)
             slash.editReply({
-              content: `哞!這是 \`${minecraftIp}\` 的資訊:`,
+              content: `哞！這是 \`${minecraftIp}\` 的資訊：`,
               embeds: [dataembed],
             })
           })
@@ -438,11 +438,11 @@ ${toSuggest}`)
     case "youtube":
       const toYoutube = slash.options.getChannel("channel")
       if (toYoutube.type != "GUILD_VOICE")
-        return slash.reply({ content: "哞!這不是語音頻道!", ephemeral: true })
+        return slash.reply({ content: "哞！這不是語音頻道！", ephemeral: true })
       game
         .play(toYoutube)
         .then((result) =>
-          slash.reply(`哞!點擊連結開始一起看YouTube! <${result.inviteLink}>`)
+          slash.reply(`哞！點擊連結開始一起看YouTube！ <${result.inviteLink}>`)
         )
       break
     case "2048":
@@ -488,7 +488,7 @@ ${toSuggest}`)
                 value: content[2].split("：")[1].replaceAll("、", "\n"),
               })
             slash.editReply({
-              content: "哞!這是第1頁",
+              content: "哞！這是第1頁",
               embeds: [embed],
               components: [generateToggleButtonRow(slash.user.id)],
             })
@@ -500,7 +500,7 @@ ${toSuggest}`)
       const toColor = slash.options.getString("code")
       const color = toColor.startsWith("#") ? toColor.split("#")[1] : toColor
       if (parseInt(`0x${color}`).toString() == "NaN")
-        return slash.reply({ content: "哞!這不是色號!", ephemeral: true })
+        return slash.reply({ content: "哞！這不是色號！", ephemeral: true })
       let embed
       try {
         embed = new builders.EmbedBuilder()
@@ -508,7 +508,7 @@ ${toSuggest}`)
           .setColor(parseInt(`0x${color}`))
           .setImage(`https://singlecolorimage.com/get/${color}/250x250`)
       } catch (error) {
-        slash.reply({ content: "哞!API發生錯誤!", ephemeral: true })
+        slash.reply({ content: "哞！API發生錯誤！", ephemeral: true })
         return
       }
       slash.reply({ embeds: [embed] })
@@ -521,7 +521,7 @@ ${toSuggest}`)
         .setEmoji({ name: "lyrics", id: "1009247448738316319" })
       const slRow = new builders.ActionRowBuilder().addComponents(searchLyrics)
       slash.reply({
-        content: "哞!點擊此按鈕即可打開搜尋表單!",
+        content: "哞！點擊此按鈕即可打開搜尋表單！",
         components: [slRow],
       })
       break
@@ -593,7 +593,7 @@ ${toSuggest}`)
       )
       timerDB.push({ send: slash.user.send, time: timerTime })
       slash.reply({
-        content: `哞!你的計時器將在<t:${timerTime.unix()}:R>後響鈴!\n(注意:機器人一旦重啟，計時器就會失效了，~~所以祈禱機器人不要重啟吧~~)`,
+        content: `哞！你的計時器將在<t:${timerTime.unix()}:R>後響鈴！\n(注意：機器人一旦重啟，計時器就會失效了，~~所以祈禱機器人不要重啟吧~~)`,
         ephemeral: true,
       })
       break
@@ -618,7 +618,7 @@ client.on("interactionCreate", async (button) => {
     case /toggleButtonLeft-[^-][0-9]*/.test(button.customId):
       if (button.user.id != button.customId.replace("toggleButtonLeft-")) return
       let nowPage = parseInt(
-        button.message.content.split("哞!這是第")[1].split("頁")[0]
+        button.message.content.split("哞！這是第")[1].split("頁")[0]
       )
       button.deferUpdate()
       if (nowPage == 1) return
@@ -653,7 +653,7 @@ client.on("interactionCreate", async (button) => {
               value: content[2].split("：")[1].replaceAll("、", "\n"),
             })
           button.message.edit({
-            content: `哞!這是第${nowPage - 1}頁`,
+            content: `哞！這是第${nowPage - 1}頁`,
             embeds: [embed],
             components: [toggleButtonRow],
           })
@@ -664,7 +664,7 @@ client.on("interactionCreate", async (button) => {
       if (button.user.id != button.customId.replace("toggleButtonRight-"))
         return
       let nowPageR = parseInt(
-        button.message.content.split("哞!這是第")[1].split("頁")[0]
+        button.message.content.split("哞！這是第")[1].split("頁")[0]
       )
       button.deferUpdate()
       if (nowPageR == 6) return
@@ -700,7 +700,7 @@ client.on("interactionCreate", async (button) => {
               value: content[2].split("：")[1].replaceAll("、", "\n"),
             })
           button.message.edit({
-            content: `哞!這是第${nowPageR + 1}頁`,
+            content: `哞！這是第${nowPageR + 1}頁`,
             embeds: [embed],
             components: [toggleButtonRow],
           })
@@ -713,19 +713,19 @@ client.on("interactionCreate", async (button) => {
       button.deferUpdate()
       const coinnum = rnum(1, 2)
       if (coinnum == 1 && button.customId.startsWith("coinButtonHead-"))
-        return button.message.edit({ content: "答對了!", components: [] })
+        return button.message.edit({ content: "答對了！", components: [] })
       if (coinnum == 1 && button.customId.startsWith("coinButtonTail-"))
         return button.message.edit({
-          content: "錯了,是正面才對",
+          content: "錯了，是正面才對",
           components: [],
         })
       if (coinnum == 2 && button.customId.startsWith("coinButtonHead-"))
         return button.message.edit({
-          content: "錯了,是反面才對",
+          content: "錯了，是反面才對",
           components: [],
         })
       if (coinnum == 2 && button.customId.startsWith("coinButtonTail-"))
-        return button.message.edit({ content: "答對了!", components: [] })
+        return button.message.edit({ content: "答對了！", components: [] })
       break
   }
 })
@@ -759,7 +759,7 @@ client.on("interactionCreate", async (click) => {
         modal.fields.getTextInputValue("songname")
       ).then((lyrics) => {
         const toSend =
-          lyrics != "哞!找不到歌詞!"
+          lyrics
             ? {
                 files: [
                   new Discord.MessageAttachment(
@@ -768,12 +768,12 @@ client.on("interactionCreate", async (click) => {
                   ),
                 ],
               }
-            : lyrics
+            :  "哞！找不到歌詞！"
         modal.editReply(toSend)
       })
     })
   } catch (err) {
-    click.channel.send("哞!尋找歌詞時出問題了!請將表單關掉,並且再打開一次!")
+    click.channel.send("哞！尋找歌詞時出問題了！請將表單關掉，並且再打開一次！")
   }
 })
 client.on("interactionCreate", async (context) => {
@@ -786,7 +786,7 @@ client.on("interactionCreate", async (context) => {
           tag = tag.slice(0, -2) // 移除 #0
         }
         context.reply({
-          content: `哞!這是 \`${tag}\` 的頭貼:`,
+          content: `哞！這是 \`${tag}\` 的頭貼：`,
           files: [
             `${client.users.cache
               .get(context.targetId)
@@ -794,7 +794,7 @@ client.on("interactionCreate", async (context) => {
           ],
         })
       } else {
-        context.reply("哞!發生錯誤!")
+        context.reply("哞！發生錯誤！")
       }
       break
     case "投票":
@@ -804,7 +804,7 @@ client.on("interactionCreate", async (context) => {
           pollmsg.react("👎")
         })
       })
-      context.reply({ content: "哞!投票已傳送!", ephemeral: true })
+      context.reply({ content: "哞！投票已傳送！", ephemeral: true })
       break
     case "網頁截圖":
       context.channel.messages.fetch(context.targetId).then(async (shoting) => {
@@ -812,12 +812,12 @@ client.on("interactionCreate", async (context) => {
         if (
           !(shoting.startsWith("http://") || shoting.startsWith("https://"))
         ) {
-          return context.reply({ content: "哞!這不是網址!", ephemeral: true })
+          return context.reply({ content: "哞！這不是網址！", ephemeral: true })
         }
         context.deferReply()
         const result = await screenshot.screenshot(shoting)
         context.editReply({
-          content: `哞!這是 \`${shoting}\` 的截圖:`,
+          content: `哞！這是 \`${shoting}\` 的截圖：`,
           files: [result],
         })
       })
@@ -855,21 +855,21 @@ client.on("messageCreate", (message) => {
       const ballnum = rnum(1, 3)
       const balllist = [
         {
-          content: "哞!我接到球了!",
+          content: "哞！我接到球了！",
           files: {
             name: "catch.png",
             data: "https://cowlinecdn.kiwichang.repl.co/ball/cow_catch.png",
           },
         },
         {
-          content: "唉呦!好痛!",
+          content: "唉呦！好痛！",
           files: {
             name: "ko.png",
             data: "https://cowlinecdn.kiwichang.repl.co/ball/cow_ko.png",
           },
         },
         {
-          content: "哞!我接到球了!\n我把球丟給你\n你沒接到,你看起來很痛的樣子",
+          content: "哞！我接到球了！\n我把球丟給你\n你沒接到，你看起來很痛的樣子",
           files: {
             name: "you_ko.png",
             data: "https://cowlinecdn.kiwichang.repl.co/ball/didi_ko.png",
@@ -883,7 +883,7 @@ client.on("messageCreate", (message) => {
 setInterval(() => {
   timerDB.forEach((timer) => {
     if (timer.time <= moment()) {
-      timer.send("哞!時間到!")
+      timer.send("哞！時間到！")
     }
   })
 })

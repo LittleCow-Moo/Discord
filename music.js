@@ -14,9 +14,9 @@ const client = new Discord.Client({
 client.login(process.env.Token)
 process.on("uncaughtException", (err) => {
   console.log(
-    `${chalk.magenta("哞!")} ${chalk.green("音樂系統")}發生了${chalk.red(
+    `${chalk.magenta("哞！")} ${chalk.green("音樂系統")}發生了${chalk.red(
       "錯誤"
-    )}!\n${err}`
+    )}！\n${err}`
   )
 })
 
@@ -26,9 +26,9 @@ const connections = {}
 
 client.on("ready", () => {
   console.log(
-    `${chalk.magenta("哞!")} ${chalk.green("音樂系統")}已用 @${
+    `${chalk.magenta("哞！")} ${chalk.green("音樂系統")}已用 @${
       client.user.tag
-    } 的身份登入!`
+    } 的身份登入！`
   )
   play.setToken({ soundcloud: { client_id: process.env.SoundCloudClientID } })
 })
@@ -38,7 +38,7 @@ const searchSong = async (query) => {
     const results = await play.search(query, { limit: 1 })
     return results[0]
   } catch (error) {
-    console.error(`搜尋歌曲時發生錯誤: ${error}`)
+    console.error(`搜尋歌曲時發生錯誤：${error}`)
     throw error
   }
 }
@@ -59,7 +59,7 @@ const playSong = async (guildId, song) => {
     stream = info.stream
     resource = createAudioResource(stream, { inputType: info.type })
   } catch (error) {
-    console.error(`播放歌曲時發生錯誤: ${error}`)
+    console.error(`播放歌曲時發生錯誤： ${error}`)
     throw error
   }
 
@@ -77,9 +77,9 @@ const playSong = async (guildId, song) => {
     if (newState.status === "idle") {
       queues[guildId].shift()
       if (queues[guildId][0]) {
-        console.log(`✅ 哞!已播放完畢\n⏯️ 下一首: \`${queues[guildId][0]}\``)
+        console.log(`✅ 哞！已播放完畢\n⏯️ 下一首： \`${queues[guildId][0]}\``)
       } else {
-        console.log("✅ 哞!已播放完畢\n⏸️ 待播清單是空的!")
+        console.log("✅ 哞！已播放完畢\n⏸️ 待播清單是空的！")
       }
       if (!queues[guildId][0]) return
 
@@ -101,7 +101,7 @@ const playSong = async (guildId, song) => {
         connections[guildId].subscribe(nextPlayer)
         nextPlayer.addListener("stateChange", eventChangeHandler)
       } catch (error) {
-        console.error(`播放下一首歌曲時發生錯誤: ${error}`)
+        console.error(`播放下一首歌曲時發生錯誤： ${error}`)
         throw error
       }
     }
@@ -118,15 +118,15 @@ client.on("interactionCreate", async (slash) => {
 
   if (sub === "play") {
     if (!slash.member.voice?.channel)
-      return slash.reply("❌ 哞!請先加入一個語音頻道!")
+      return slash.reply("❌ 哞！請先加入一個語音頻道！")
 
     const query = slash.options.get("query", false).value
     try {
       await addToQueue(slash.guild.id, query)
-      slash.reply(`✅ 哞!已將 \`${query}\` 加到待播清單!`)
+      slash.reply(`✅ 哞！已將 \`${query}\` 加到待播清單！`)
     } catch (error) {
-      console.error(`將歌曲加入待播清單時發生錯誤: ${error}`)
-      slash.reply("❌ 哞!將歌曲加入待播清單時發生錯誤!")
+      console.error(`加入歌曲時發生錯誤： ${error}`)
+      slash.reply("❌ 哞！加入歌曲時發生錯誤！")
     }
 
     if (!players[slash.guild.id]) {
@@ -144,11 +144,11 @@ client.on("interactionCreate", async (slash) => {
         await playSong(slash.guild.id, song)
 
         slash.editReply(
-          `▶️ 哞!正在播放: \`${song}\`\n<:stage:981552077098602517> 如果你在舞台頻道內播放音樂,請管理員邀請我成為發言者!`
+          `▶️ 哞！正在播放： \`${song}\`\n<:stage_g:986711131475292240> 如果你在舞台頻道內播放音樂，請管理員邀請我成為發言者！`
         )
       } catch (error) {
-        console.error(`播放歌曲時發生錯誤: ${error}`)
-        slash.editReply("❌ 哞!播放歌曲時發生錯誤!")
+        console.error(`播放歌曲時發生錯誤： ${error}`)
+        slash.editReply("❌ 哞！播放歌曲時發生錯誤！")
       }
     }
     const EventChangeHandler = async (oldOne, newOne) => {
@@ -156,10 +156,10 @@ client.on("interactionCreate", async (slash) => {
         queues[slash.guild.id].splice(0, 1)
         if (queues[slash.guild.id][0]) {
           slash.channel.send(
-            `✅ 哞!已播放完畢\n⏯️ 下一首: \`${queues[slash.guild.id][0].name}\``
+            `✅ 哞！已播放完畢\n⏯️ 下一首： \`${queues[slash.guild.id][0].name}\``
           )
         } else {
-          slash.channel.send(`✅ 哞!已播放完畢\n⏸️ 待播清單是空的!`)
+          slash.channel.send(`✅ 哞！已播放完畢\n⏸️ 待播清單是空的！`)
         }
         if (!queues[slash.guild.id][0]) return
         let stream
@@ -188,26 +188,26 @@ client.on("interactionCreate", async (slash) => {
   }
   if (sub == "skip") {
     players[slash.guild.id].stop()
-    slash.reply("⏯️ 哞!已跳過!")
+    slash.reply("⏯️ 哞！已跳過！")
   }
   if (sub == "pause") {
     players[slash.guild.id].pause()
-    slash.reply("⏸️ 哞!已暫停!")
+    slash.reply("⏸️ 哞！已暫停！")
   }
   if (sub == "resume") {
     players[slash.guild.id].unpause()
-    slash.reply("▶️ 哞!已恢復播放!")
+    slash.reply("▶️ 哞！已恢復播放！")
   }
   if (sub == "queue") {
     const renderPl = []
     queues[slash.guild.id].forEach((content, index) => {
       renderPl[index] = `${index + 1}. \`${content.replaceAll("`", "\\`")}\``
     })
-    slash.reply(renderPl.join("\n") || "❌ 哞!待播清單是空的!")
+    slash.reply(renderPl.join("\n") || "❌ 哞！待播清單是空的！")
   }
   if (sub == "clear") {
     queues[slash.guild.id] = []
-    slash.reply("✅ 哞!已將待播清單清空!")
+    slash.reply("✅ 哞！已將待播清單清空！")
   }
   if (sub == "join") {
     const connection = joinVoiceChannel({
@@ -216,11 +216,11 @@ client.on("interactionCreate", async (slash) => {
       adapterCreator: slash.guild.voiceAdapterCreator,
     })
     connections[slash.guild.id] = connection
-    slash.reply("✅ 哞!已加入語音頻道!")
+    slash.reply("✅ 哞！已加入語音頻道！")
   }
   if (sub == "leave") {
     connections[slash.guild.id].disconnect()
     connections[slash.guild.id] = null
-    slash.reply("✅ 哞!已離開語音頻道!")
+    slash.reply("✅ 哞！已離開語音頻道！")
   }
 })
