@@ -137,7 +137,7 @@ client.on("interactionCreate", async (slash) => {
     if (!players[slash.guild.id]) {
       slash.deferReply()
 
-      const connection = joinVoiceChannel({
+      joinVoiceChannel({
         channelId: slash.member.voice.channel.id,
         guildId: slash.guild.id,
         adapterCreator: slash.guild.voiceAdapterCreator,
@@ -214,7 +214,7 @@ client.on("interactionCreate", async (slash) => {
     slash.reply("✅ 哞！已將待播清單清空！")
   }
   if (sub == "join") {
-    const connection = joinVoiceChannel({
+    joinVoiceChannel({
       channelId: slash.member.voice.channel.id,
       guildId: slash.guild.id,
       adapterCreator: slash.guild.voiceAdapterCreator,
