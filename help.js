@@ -7,9 +7,9 @@ const hjson = require("./help.json")
 const option = new SelectMenuOptionBuilder()
 const options = [
   option
-    .setLabel(hjson.haha.name)
-    .setDescription(hjson.haha.desc)
-    .setValue("haha")
+    .setLabel(hjson.joke.name)
+    .setDescription(hjson.joke.desc)
+    .setValue("joke")
     .setEmoji({ id: "992975702276190218" })
     .toJSON(),
   option
@@ -73,9 +73,9 @@ const options = [
     .setEmoji({ id: "992975684702064800" })
     .toJSON(),
   option
-    .setLabel(hjson.delay.name)
-    .setDescription(hjson.delay.desc)
-    .setValue("delay")
+    .setLabel(hjson.ping.name)
+    .setDescription(hjson.ping.desc)
+    .setValue("ping")
     .setEmoji({ id: "992975682881728633" })
     .toJSON(),
   option

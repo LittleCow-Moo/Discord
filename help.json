@@ -1,5 +1,5 @@
 {
-  "haha": { "name": "笑話", "desc": "為你說一句笑話！" },
+  "joke": { "name": "笑話", "desc": "為你說一句笑話！" },
   "coin": { "name": "猜硬幣", "desc": "玩猜硬幣小遊戲！" },
   "say": { "name": "說話", "desc": "讓我一字不差的學你說話！" },
   "suggest": { "name": "建議", "desc": "告訴我你想到的新功能！" },
@@ -10,7 +10,7 @@
   "screenshot": { "name": "網頁截圖", "desc": "截圖某個網站！" },
   "shortlink": { "name": "短網址", "desc": "縮短你的網址！" },
   "botinfo": { "name": "機器人資訊", "desc": "查看關於我的資訊！" },
-  "delay": { "name": "延遲", "desc": "測測看我的延遲！" },
+  "ping": { "name": "延遲", "desc": "測測看我的延遲！" },
   "mcjava": {
     "name": "MC伺服/Java",
     "desc": "查看關於某個Minecraft Java版伺服器的資訊！"
