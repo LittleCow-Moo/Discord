@@ -23,7 +23,6 @@
     "os-utils": "latest",
     "discord-screenshot": "latest",
     "chalk": "4.x",
-    "discord-games-beta": "latest",
     "@discordjs/voice": "latest",
     "@hizollo/games": "latest",
     "xml-js": "latest",

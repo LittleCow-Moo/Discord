@@ -19,7 +19,6 @@
     "name": "MC伺服/基岩",
     "desc": "查看關於某個Minecraft 基岩版伺服器的資訊！"
   },
-  "youtube": { "name": "一起看YouTube", "desc": "和你的朋友一起看YouTube！" },
   "2048": { "name": "2048", "desc": "玩2048遊戲！" },
   "invoice": { "name": "發票兌獎", "desc": "來看看你的發票有沒有中獎！" },
   "color": { "name": "顏色", "desc": "看看某個顏色！" },

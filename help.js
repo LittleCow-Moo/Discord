@@ -91,12 +91,6 @@ const options = [
     .setEmoji({ id: "992977040812806235" })
     .toJSON(),
   option
-    .setLabel(hjson.youtube.name)
-    .setDescription(hjson.youtube.desc)
-    .setValue("youtube")
-    .setEmoji({ id: "992975680298041385" })
-    .toJSON(),
-  option
     .setLabel(hjson["2048"].name)
     .setDescription(hjson["2048"].desc)
     .setValue("2048")

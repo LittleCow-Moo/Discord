@@ -26,7 +26,6 @@ const so = require("os")
 const xml = require("xml-js")
 const screenshot = require("discord-screenshot")
 const chalk = require("chalk")
-const DiscordGame = require("discord-games-beta")
 const { DjsTofe: tofe } = require("@hizollo/games")
 const short = require("shortlib")
 const mcsrv = require("mcsrv")
@@ -38,9 +37,6 @@ function get_lyrics(artist, title) {
     resolve(lyrics)
   })
 }
-const game = new DiscordGame(process.env.Token, "youtube", 2, {
-  neverExpire: false,
-})
 const helpRow = require("./help.js")
 const jokelist = [
   "冰塊最想做什麼事?||退伍 因為他當冰很久了||",
@@ -434,16 +430,6 @@ ${toSuggest}`)
           })
           break
       }
-      break
-    case "youtube":
-      const toYoutube = slash.options.getChannel("channel")
-      if (toYoutube.type != "GUILD_VOICE")
-        return slash.reply({ content: "哞！這不是語音頻道！", ephemeral: true })
-      game
-        .play(toYoutube)
-        .then((result) =>
-          slash.reply(`哞！點擊連結開始一起看YouTube！ <${result.inviteLink}>`)
-        )
       break
     case "2048":
       const tofeGame = new tofe({
