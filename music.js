@@ -29,7 +29,13 @@ client.on("ready", () => {
       client.user.tag
     } 的身份登入！`
   )
-  play.setToken({ soundcloud: { client_id: process.env.SoundCloudClientID } })
+  play.getFreeClientID().then((clientID) =>
+    play.setToken({
+      soundcloud: {
+        client_id: clientID,
+      },
+    })
+  )
 })
 
 const searchSong = async (query) => {
