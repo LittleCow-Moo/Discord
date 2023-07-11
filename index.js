@@ -104,7 +104,7 @@ const client = new Discord.Client({
 })
 client.login(process.env.Token)
 
-const delay = (ms) => new Promise((resolve) => setTimeout(() => resolve(), ms))
+const sleep = (ms) => new Promise((resolve) => setTimeout(() => resolve(), ms))
 const rnum = (a, b) => {
   if (a > b) {
     var c = a
@@ -198,7 +198,7 @@ client.on("interactionCreate", async (slash) => {
   if (!slash.isCommand()) return
   const command =
     slash.options.getSubcommandGroup(false) || slash.options.getSubcommand()
-  await delay(200)
+  await sleep(200)
   switch (command) {
     case "help":
       const help = new builders.EmbedBuilder()
@@ -326,7 +326,7 @@ ${toSuggest}`)
       rendermsg.push(`於<t:${Math.floor(client.readyTimestamp / 1000)}:F>上線`)
       slash.reply(rendermsg.join("\n"))
       break
-    case "delay":
+    case "ping":
       slash
         .reply({ content: "哞！載入中...", fetchReply: true })
         .then(async (repli) => {
@@ -888,7 +888,7 @@ setInterval(() => {
   })
 })
 api.use((ctx) => {
-  if (ctx.url != "/delay") return
-  ctx.body = { delay: client.ws.ping }
+  if (ctx.url != "/ping") return
+  ctx.body = { ping: client.ws.ping }
 })
 api.listen(process.env.APIPort)
