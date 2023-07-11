@@ -42,7 +42,7 @@ const game = new DiscordGame(process.env.Token, "youtube", 2, {
   neverExpire: false,
 })
 const helpRow = require("./help.js")
-const hahalist = [
+const jokelist = [
   "冰塊最想做什麼事?||退伍 因為他當冰很久了||",
   "有一天,我去吉野家,可是||吉野不在家||",
   "我走進眼科診所跟醫生抱怨說:「最近視力變差了,我需要配一副新眼鏡。」他||嘆了一口氣回說:「你真的病得不輕，我這裡可是甜甜圈店啊!」||",
@@ -210,8 +210,8 @@ client.on("interactionCreate", async (slash) => {
         )
       slash.reply({ embeds: [help], components: [helpRow] })
       break
-    case "haha":
-      slash.reply(hahalist[rnum(1, hahalist.length) - 1])
+    case "joke":
+      slash.reply(jokelist[rnum(1, jokelist.length) - 1])
       break
     case "coin":
       slash.reply({
