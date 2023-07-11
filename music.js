@@ -22,7 +22,6 @@ process.on("uncaughtException", (err) => {
 
 const players = {}
 const queues = {}
-const connections = {}
 
 client.on("ready", () => {
   console.log(
@@ -49,7 +48,7 @@ const addToQueue = async (guildId, song) => {
 }
 
 const playSong = async (guildId, song) => {
-  const connection = connections[guildId]
+  const connection = getVoiceConnection(guildId)
   const searched = await searchSong(song)
 
   let stream
@@ -98,7 +97,7 @@ const playSong = async (guildId, song) => {
         })
         nextPlayer.play(nextResource)
         players[guildId] = nextPlayer
-        connections[guildId].subscribe(nextPlayer)
+        getVoiceConnection(guildId).subscribe(nextPlayer)
         nextPlayer.addListener("stateChange", eventChangeHandler)
       } catch (error) {
         console.error(`播放下一首歌曲時發生錯誤： ${error}`)
@@ -137,7 +136,6 @@ client.on("interactionCreate", async (slash) => {
         guildId: slash.guild.id,
         adapterCreator: slash.guild.voiceAdapterCreator,
       })
-      connections[slash.guild.id] = connection
 
       try {
         const song = queues[slash.guild.id][0]
@@ -180,7 +178,7 @@ client.on("interactionCreate", async (slash) => {
         })
         player.play(resource)
         players[slash.guild.id] = player
-        connections[slash.guild.id].subscribe(player)
+        getVoiceConnection(slash.guild.id).subscribe(player)
         players[slash.guild.id].addListener("stateChange", EventChangeHandler)
       }
     }
@@ -215,12 +213,10 @@ client.on("interactionCreate", async (slash) => {
       guildId: slash.guild.id,
       adapterCreator: slash.guild.voiceAdapterCreator,
     })
-    connections[slash.guild.id] = connection
     slash.reply("✅ 哞！已加入語音頻道！")
   }
   if (sub == "leave") {
-    connections[slash.guild.id].disconnect()
-    connections[slash.guild.id] = null
+    getVoiceConnection(slash.guild.id).disconnect()
     slash.reply("✅ 哞！已離開語音頻道！")
   }
 })
