@@ -500,16 +500,27 @@ ${toSuggest}`)
       slash.reply({ embeds: [embed] })
       break
     case "lyrics":
-      const searchLyrics = new builders.ButtonBuilder()
-        .setStyle(2)
-        .setLabel("尋找歌詞")
-        .setCustomId("searchLyrics")
-        .setEmoji({ name: "lyrics", id: "1009247448738316319" })
-      const slRow = new builders.ActionRowBuilder().addComponents(searchLyrics)
-      slash.reply({
-        content: "哞！點擊此按鈕即可打開搜尋表單！",
-        components: [slRow],
-      })
+      slash.deferReply()
+      try {
+          get_lyrics(
+            slash.options.getString("artist"),
+            slash.options.getString("song")
+          ).then((lyrics) => {
+            const toSend = lyrics
+              ? {
+                  files: [
+                    new Discord.MessageAttachment(
+                      Buffer.from(lyrics),
+                      "lyrics.txt"
+                    ),
+                  ],
+                }
+              : "哞！找不到歌詞！"
+            slash.editReply(toSend)
+          })
+      } catch (err) {
+        slash.editReply("哞！尋找歌詞時出問題了！請將表單關掉，並且再打開一次！")
+      }
       break
     case "earthquake":
       const eqIndex = slash.options.getInteger("index") || 1
@@ -727,39 +738,6 @@ client.on("interactionCreate", async (select) => {
     )
     .setImage(`https://cowhelpcdn.cowteam.repl.co/${select.values[0]}.png`)
   select.reply({ embeds: [embed], ephemeral: true })
-})
-client.on("interactionCreate", async (click) => {
-  if (!click.isButton) return
-  if (click.customId != "searchLyrics") return
-  try {
-    click.showModal(
-      new Discord.Modal({ customId: "searchLyric", title: "尋找歌詞" }, client)
-        .addComponents(LyricThingys.artist.toJSON())
-        .addComponents(LyricThingys.songname.toJSON())
-    )
-    const filter = (interaction) => interaction.customId === "searchLyric"
-    click.awaitModalSubmit({ filter, time: 15_000 }).then((modal) => {
-      modal.deferReply()
-      get_lyrics(
-        modal.fields.getTextInputValue("artist"),
-        modal.fields.getTextInputValue("songname")
-      ).then((lyrics) => {
-        const toSend = lyrics
-          ? {
-              files: [
-                new Discord.MessageAttachment(
-                  Buffer.from(lyrics),
-                  "lyrics.txt"
-                ),
-              ],
-            }
-          : "哞！找不到歌詞！"
-        modal.editReply(toSend)
-      })
-    })
-  } catch (err) {
-    click.channel.send("哞！尋找歌詞時出問題了！請將表單關掉，並且再打開一次！")
-  }
 })
 client.on("interactionCreate", async (context) => {
   if (!context.isContextMenu) return
