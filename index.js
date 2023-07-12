@@ -278,7 +278,7 @@ ${toSuggest}`)
       break
 
     case "time":
-      slash.reply(`哞！現在的時間是：<t:${Math.floor(+new Date() / 1000)}:F>`)
+      slash.reply(`哞！現在的時間是： <t:${Math.floor(+new Date() / 1000)}:F>`)
       break
     case "screenshot":
       const toScreenshot = slash.options.getString("url")
@@ -313,9 +313,9 @@ ${toSuggest}`)
       break
     case "botinfo":
       const rendermsg = ["牛牛 v0.3.8"]
-      rendermsg.push(`伺服器數量：\`${client.guilds.cache.size}\``)
-      rendermsg.push(`CPU型號：\`${so.cpus()[0].model}\``)
-      rendermsg.push(`CPU使用量：\`${cpu.toString().slice(0, 4)}%\``)
+      rendermsg.push(`伺服器數量： \`${client.guilds.cache.size}\``)
+      rendermsg.push(`CPU型號： \`${so.cpus()[0].model}\``)
+      rendermsg.push(`CPU使用量： \`${cpu.toString().slice(0, 4)}%\``)
       let tempTime = moment.duration(client.uptime)
       let y = `${tempTime.hours()}小時${tempTime.minutes()}分鐘${tempTime.seconds()}秒`
       rendermsg.push(`已上線\`${y}\``)
@@ -327,9 +327,9 @@ ${toSuggest}`)
         .reply({ content: "哞！載入中...", fetchReply: true })
         .then(async (repli) => {
           slash.editReply(
-            `哞！機器人延遲是：${
+            `哞！機器人延遲是： ${
               repli.createdTimestamp - slash.createdTimestamp
-            }ms | API延遲是：${client.ws.ping}ms`
+            }ms | API延遲是： ${client.ws.ping}ms`
           )
         })
       break
