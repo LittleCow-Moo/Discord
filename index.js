@@ -173,7 +173,7 @@ const LyricThingys = {
 
 client.on("ready", async () => {
   console.clear()
-  console.log(`${chalk.magenta("牛牛")} v0.3.7`)
+  console.log(`${chalk.magenta("牛牛")} v0.3.8`)
   console.log(
     chalk.magenta(`
     █   █ ▀█▀ ▀█▀ █   █▀▀   █▀▀ █▀█ █ █ █
