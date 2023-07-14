@@ -194,7 +194,6 @@ client.on("interactionCreate", async (slash) => {
   if (!slash.isCommand()) return
   const command =
     slash.options.getSubcommandGroup(false) || slash.options.getSubcommand()
-  await sleep(1000)
   switch (command) {
     case "help":
       const help = new builders.EmbedBuilder()
@@ -290,11 +289,12 @@ ${toSuggest}`)
       ) {
         return slash.reply({ content: "哞！這不是網址！", ephemeral: true })
       }
-      slash.deferReply()
-      const result = await screenshot.screenshot(toScreenshot)
-      slash.editReply({
-        content: `哞！這是 \`${toScreenshot}\` 的截圖：`,
-        files: [result],
+      slash.deferReply().then(async () => {
+        const result = await screenshot.screenshot(toScreenshot)
+        slash.editReply({
+          content: `哞！這是 \`${toScreenshot}\` 的截圖：`,
+          files: [result],
+        })
       })
       break
     case "shortlink":
@@ -303,11 +303,12 @@ ${toSuggest}`)
       if (!(toShort.startsWith("http://") || toShort.startsWith("https://")))
         return slash.reply({ content: "哞！這不是網址！", ephemeral: true })
 
-      slash.deferReply({ ephemeral: true })
-      short[shortType](toShort).then((target) => {
-        slash.editReply({
-          content: `哞！你的短網址： \`${target}\``,
-          ephemeral: false,
+      slash.deferReply({ ephemeral: true }).then(() => {
+        short[shortType](toShort).then((target) => {
+          slash.editReply({
+            content: `哞！你的短網址： \`${target}\``,
+            ephemeral: false,
+          })
         })
       })
       break
@@ -336,100 +337,101 @@ ${toSuggest}`)
     case "minecraft":
       const minecraftType = slash.options.getSubcommand()
       const minecraftIp = slash.options.getString("server")
-      slash.deferReply()
-      switch (minecraftType) {
-        case "bedrock":
-          mcsrv("../bedrock/2/" + minecraftIp).then((body) => {
-            if (!body.online)
-              return slash.editReply({ content: "哞！伺服器沒開！" })
-            const dataembed = new builders.EmbedBuilder()
-              .addFields({
-                name: "名稱",
-                value: body.motd.clean.join("\n") || "查無資料",
-                inline: true,
+      slash.deferReply().then(() => {
+        switch (minecraftType) {
+          case "bedrock":
+            mcsrv("../bedrock/2/" + minecraftIp).then((body) => {
+              if (!body.online)
+                return slash.editReply({ content: "哞！伺服器沒開！" })
+              const dataembed = new builders.EmbedBuilder()
+                .addFields({
+                  name: "名稱",
+                  value: body.motd.clean.join("\n") || "查無資料",
+                  inline: true,
+                })
+                .addFields({
+                  name: "玩家數",
+                  value: [
+                    String(body.players.online) || "查無資料",
+                    "/",
+                    String(body.players.max) || "查無資料",
+                  ].join(""),
+                  inline: true,
+                })
+                .addFields({
+                  name: "版本",
+                  value: body.version || "查無資料",
+                  inline: true,
+                })
+                .addFields({
+                  name: "模式",
+                  value: body.gamemode || "查無資料",
+                  inline: true,
+                })
+                .addFields({
+                  name: "軟體",
+                  value: body.software || "查無資料",
+                  inline: true,
+                })
+                .addFields({
+                  name: "端口",
+                  value: String(body.port) || "查無資料",
+                  inline: true,
+                })
+              slash.editReply({
+                content: `哞！這是 \`${minecraftIp}\` 的資訊：`,
+                embeds: [dataembed],
               })
-              .addFields({
-                name: "玩家數",
-                value: [
-                  String(body.players.online) || "查無資料",
-                  "/",
-                  String(body.players.max) || "查無資料",
-                ].join(""),
-                inline: true,
-              })
-              .addFields({
-                name: "版本",
-                value: body.version || "查無資料",
-                inline: true,
-              })
-              .addFields({
-                name: "模式",
-                value: body.gamemode || "查無資料",
-                inline: true,
-              })
-              .addFields({
-                name: "軟體",
-                value: body.software || "查無資料",
-                inline: true,
-              })
-              .addFields({
-                name: "端口",
-                value: String(body.port) || "查無資料",
-                inline: true,
-              })
-            slash.editReply({
-              content: `哞！這是 \`${minecraftIp}\` 的資訊：`,
-              embeds: [dataembed],
             })
-          })
-          break
-        case "java":
-          mcsrv(minecraftIp).then((body) => {
-            if (!body.online)
-              return slash.editReply({ content: "哞！伺服器沒開！" })
-            const dataembed = new builders.EmbedBuilder()
-              .addFields({
-                name: "MOTD",
-                value: body.motd.clean.join("\n") || "查無資料",
-                inline: true,
+            break
+          case "java":
+            mcsrv(minecraftIp).then((body) => {
+              if (!body.online)
+                return slash.editReply({ content: "哞！伺服器沒開！" })
+              const dataembed = new builders.EmbedBuilder()
+                .addFields({
+                  name: "MOTD",
+                  value: body.motd.clean.join("\n") || "查無資料",
+                  inline: true,
+                })
+                .addFields({
+                  name: "玩家數",
+                  value: [
+                    String(body.players.online) || "查無資料",
+                    "/",
+                    String(body.players.max) || "查無資料",
+                  ].join(""),
+                  inline: true,
+                })
+                .addFields({
+                  name: "版本",
+                  value: body.version || "查無資料",
+                  inline: true,
+                })
+                .addFields({
+                  name: "協議版本",
+                  value: String(body.protocol) || "查無資料",
+                  inline: true,
+                })
+                .addFields({
+                  name: "軟體",
+                  value: body.software || "查無資料",
+                  inline: true,
+                })
+                .addFields({
+                  name: "端口",
+                  value: String(body.port) || "查無資料",
+                  inline: true,
+                })
+                .setThumbnail(`https://api.mcsrvstat.us/icon/${minecraftIp}`)
+              slash.editReply({
+                content: `哞！這是 \`${minecraftIp}\` 的資訊：`,
+                embeds: [dataembed],
               })
-              .addFields({
-                name: "玩家數",
-                value: [
-                  String(body.players.online) || "查無資料",
-                  "/",
-                  String(body.players.max) || "查無資料",
-                ].join(""),
-                inline: true,
-              })
-              .addFields({
-                name: "版本",
-                value: body.version || "查無資料",
-                inline: true,
-              })
-              .addFields({
-                name: "協議版本",
-                value: String(body.protocol) || "查無資料",
-                inline: true,
-              })
-              .addFields({
-                name: "軟體",
-                value: body.software || "查無資料",
-                inline: true,
-              })
-              .addFields({
-                name: "端口",
-                value: String(body.port) || "查無資料",
-                inline: true,
-              })
-              .setThumbnail(`https://api.mcsrvstat.us/icon/${minecraftIp}`)
-            slash.editReply({
-              content: `哞！這是 \`${minecraftIp}\` 的資訊：`,
-              embeds: [dataembed],
             })
-          })
-          break
-      }
+            break
+        }
+      })
       break
     case "2048":
       const tofeGame = new tofe({
@@ -500,90 +502,90 @@ ${toSuggest}`)
       slash.reply({ embeds: [embed] })
       break
     case "lyrics":
-      slash.deferReply()
-      try {
-        get_lyrics(
-          slash.options.getString("artist"),
-          slash.options.getString("song")
-        ).then((lyrics) => {
-          const toSend = lyrics
-            ? {
-                files: [
-                  new Discord.MessageAttachment(
-                    Buffer.from(lyrics),
-                    "lyrics.txt"
-                  ),
-                ],
-              }
-            : "哞！找不到歌詞！"
-          slash.editReply(toSend)
-        })
-      } catch (err) {
-        slash.editReply(
-          "哞！尋找歌詞時出問題了！請將表單關掉，並且再打開一次！"
-        )
-      }
+      slash.deferReply().then(() => {
+        try {
+          get_lyrics(
+            slash.options.getString("artist"),
+            slash.options.getString("song")
+          ).then((lyrics) => {
+            const toSend = lyrics
+              ? {
+                  files: [
+                    new Discord.MessageAttachment(
+                      Buffer.from(lyrics),
+                      "lyrics.txt"
+                    ),
+                  ],
+                }
+              : "哞！找不到歌詞！"
+            slash.editReply(toSend)
+          })
+        } catch (err) {
+          slash.editReply("哞！尋找歌詞時出問題了！請再試一次！")
+        }
+      })
       break
     case "earthquake":
       const eqIndex = slash.options.getInteger("index") || 1
-      slash.deferReply()
-      //反正這不是我的API Key 不放.env沒差啦.w.
-      request(
-        `https://opendata.cwb.gov.tw/api/v1/rest/datastore/E-A0015-001?Authorization=rdec-key-123-45678-011121314&limit=1&format=JSON&offset=${
-          eqIndex - 1
-        }`,
-        (error, response, body) => {
-          body = JSON.parse(body)
-          const locmap = `https://www.google.com/maps/search/?api=1&query=${body.records.Earthquake[0].EarthquakeInfo.Epicenter.EpicenterLatitude},${body.records.Earthquake[0].EarthquakeInfo.Epicenter.EpicenterLongitude}`
-          let biggestinte = []
-          body.records.Earthquake[0].Intensity.ShakingArea.forEach((area) => {
-            biggestinte.push(`${area.CountyName}最大${area.AreaIntensity}`)
-          })
-          biggestinte = biggestinte.join("\n")
-          const eqEmbed = new builders.EmbedBuilder()
-            .addFields({
-              name: "編號",
-              value:
-                body.records.Earthquake[0].EarthquakeNo !=
-                (new Date().getFullYear() - 1911) * 1000
-                  ? String(body.records.Earthquake[0].EarthquakeNo)
-                  : "我用的明明是顯著有感地震的API 怎麼會沒有編號.w.",
-              inline: true,
+      slash.deferReply().then(() => {
+        //反正這不是我的API Key 不放.env沒差啦.w.
+        request(
+          `https://opendata.cwb.gov.tw/api/v1/rest/datastore/E-A0015-001?Authorization=rdec-key-123-45678-011121314&limit=1&format=JSON&offset=${
+            eqIndex - 1
+          }`,
+          (error, response, body) => {
+            body = JSON.parse(body)
+            const locmap = `https://www.google.com/maps/search/?api=1&query=${body.records.Earthquake[0].EarthquakeInfo.Epicenter.EpicenterLatitude},${body.records.Earthquake[0].EarthquakeInfo.Epicenter.EpicenterLongitude}`
+            let biggestinte = []
+            body.records.Earthquake[0].Intensity.ShakingArea.forEach((area) => {
+              biggestinte.push(`${area.CountyName}最大${area.AreaIntensity}`)
             })
-            .addFields({
-              name: "時間",
-              value: String(
-                body.records.Earthquake[0].EarthquakeInfo.OriginTime
-              ),
-              inline: true,
-            })
-            .addFields({
-              name: "深度",
-              value: `${body.records.Earthquake[0].EarthquakeInfo.FocalDepth}km`,
-              inline: true,
-            })
-            .addFields({
-              name: "芮氏規模",
-              value: String(
-                body.records.Earthquake[0].EarthquakeInfo.EarthquakeMagnitude
-                  .MagnitudeValue
-              ),
-              inline: true,
-            })
-            .addFields({
-              name: "震央",
-              value: `${body.records.Earthquake[0].EarthquakeInfo.Epicenter.Location}\n[在Google地圖上查看](${locmap})`,
-              inline: true,
-            })
-            .addFields({ name: "最大震度", value: biggestinte, inline: true })
-            .setDescription(
-              `${body.records.Earthquake[0].ReportContent}\n[地震報告連結](${body.records.Earthquake[0].Web})`
-            )
-            .setImage(body.records.Earthquake[0].ReportImageURI)
-            .setColor(0xff00a7)
-          slash.editReply({ embeds: [eqEmbed] })
-        }
-      )
+            biggestinte = biggestinte.join("\n")
+            const eqEmbed = new builders.EmbedBuilder()
+              .addFields({
+                name: "編號",
+                value:
+                  body.records.Earthquake[0].EarthquakeNo !=
+                  (new Date().getFullYear() - 1911) * 1000
+                    ? String(body.records.Earthquake[0].EarthquakeNo)
+                    : "我用的明明是顯著有感地震的API 怎麼會沒有編號.w.",
+                inline: true,
+              })
+              .addFields({
+                name: "時間",
+                value: String(
+                  body.records.Earthquake[0].EarthquakeInfo.OriginTime
+                ),
+                inline: true,
+              })
+              .addFields({
+                name: "深度",
+                value: `${body.records.Earthquake[0].EarthquakeInfo.FocalDepth}km`,
+                inline: true,
+              })
+              .addFields({
+                name: "芮氏規模",
+                value: String(
+                  body.records.Earthquake[0].EarthquakeInfo.EarthquakeMagnitude
+                    .MagnitudeValue
+                ),
+                inline: true,
+              })
+              .addFields({
+                name: "震央",
+                value: `${body.records.Earthquake[0].EarthquakeInfo.Epicenter.Location}\n[在Google地圖上查看](${locmap})`,
+                inline: true,
+              })
+              .addFields({ name: "最大震度", value: biggestinte, inline: true })
+              .setDescription(
+                `${body.records.Earthquake[0].ReportContent}\n[地震報告連結](${body.records.Earthquake[0].Web})`
+              )
+              .setImage(body.records.Earthquake[0].ReportImageURI)
+              .setColor(0xff00a7)
+            slash.editReply({ embeds: [eqEmbed] })
+          }
+        )
+      })
       break
     case "timer":
       const timerLength = slash.options.getString("time")
@@ -598,16 +600,17 @@ ${toSuggest}`)
       break
     case "cbmc":
       const postIndex = slash.options.getString("index") || 1
-      slash.deferReply()
-      const postList = await cbmc.getPostList(postIndex)
-      if (postList) {
-        const post = postList.posts[String(postIndex)].post
-        const postEmbed = new builders.EmbedBuilder()
-          .setTitle(`${post.type}${post.id.post}`)
-          .setDescription(post.content)
-          .setColor(0xff00a7)
-        slash.editReply({ embeds: [postEmbed] })
-      }
+      slash.deferReply().then(async () => {
+        const postList = await cbmc.getPostList(postIndex)
+        if (postList) {
+          const post = postList.posts[String(postIndex)].post
+          const postEmbed = new builders.EmbedBuilder()
+            .setTitle(`${post.type}${post.id.post}`)
+            .setDescription(post.content)
+            .setColor(0xff00a7)
+          slash.editReply({ embeds: [postEmbed] })
+        }
+      })
       break
   }
 })
