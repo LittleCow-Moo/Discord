@@ -538,9 +538,13 @@ ${toSuggest}`)
             const locmap = `https://www.google.com/maps/search/?api=1&query=${body.records.Earthquake[0].EarthquakeInfo.Epicenter.EpicenterLatitude},${body.records.Earthquake[0].EarthquakeInfo.Epicenter.EpicenterLongitude}`
             let biggestinte = []
             body.records.Earthquake[0].Intensity.ShakingArea.forEach((area) => {
+              if (!area.startsWith("最大震度")) return
               biggestinte.push(`${area.CountyName}最大${area.AreaIntensity}`)
             })
             biggestinte = biggestinte.join("\n")
+            const eqTime = moment(
+              body.records.Earthquake[0].EarthquakeInfo.OriginTime
+            ).unix()
             const eqEmbed = new builders.EmbedBuilder()
               .addFields({
                 name: "編號",
@@ -553,9 +557,7 @@ ${toSuggest}`)
               })
               .addFields({
                 name: "時間",
-                value: String(
-                  body.records.Earthquake[0].EarthquakeInfo.OriginTime
-                ),
+                value: `<t:${eqTime}:D><t:${eqTime}:T>`,
                 inline: true,
               })
               .addFields({
