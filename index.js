@@ -194,7 +194,7 @@ client.on("interactionCreate", async (slash) => {
   if (!slash.isCommand()) return
   const command =
     slash.options.getSubcommandGroup(false) || slash.options.getSubcommand()
-  await sleep(500)
+  await sleep(1000)
   switch (command) {
     case "help":
       const help = new builders.EmbedBuilder()
