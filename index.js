@@ -821,27 +821,33 @@ client.on("messageCreate", (message) => {
       const balllist = [
         {
           body: { content: "哞！我接到球了！" },
-          files: {
-            name: "catch.png",
-            data: "https://cowlinecdn.kiwichang.repl.co/ball/cow_catch.png",
-          },
+          files: [
+            {
+              name: "catch.png",
+              data: "https://cowlinecdn.kiwichang.repl.co/ball/cow_catch.png",
+            },
+          ],
         },
         {
           body: { content: "唉呦！好痛！" },
-          files: {
-            name: "ko.png",
-            data: "https://cowlinecdn.kiwichang.repl.co/ball/cow_ko.png",
-          },
+          files: [
+            {
+              name: "ko.png",
+              data: "https://cowlinecdn.kiwichang.repl.co/ball/cow_ko.png",
+            },
+          ],
         },
         {
           body: {
             content:
               "哞！我接到球了！\n我把球丟給你\n你沒接到，你看起來很痛的樣子",
           },
-          files: {
-            name: "you_ko.png",
-            data: "https://cowlinecdn.kiwichang.repl.co/ball/didi_ko.png",
-          },
+          files: [
+            {
+              name: "you_ko.png",
+              data: "https://cowlinecdn.kiwichang.repl.co/ball/didi_ko.png",
+            },
+          ],
         },
       ]
       message.reply(balllist[ballnum])
