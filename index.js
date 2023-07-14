@@ -820,22 +820,24 @@ client.on("messageCreate", (message) => {
       const ballnum = rnum(1, 3)
       const balllist = [
         {
-          content: "哞！我接到球了！",
+          body: { content: "哞！我接到球了！" },
           files: {
             name: "catch.png",
             data: "https://cowlinecdn.kiwichang.repl.co/ball/cow_catch.png",
           },
         },
         {
-          content: "唉呦！好痛！",
+          body: { content: "唉呦！好痛！" },
           files: {
             name: "ko.png",
             data: "https://cowlinecdn.kiwichang.repl.co/ball/cow_ko.png",
           },
         },
         {
-          content:
-            "哞！我接到球了！\n我把球丟給你\n你沒接到，你看起來很痛的樣子",
+          body: {
+            content:
+              "哞！我接到球了！\n我把球丟給你\n你沒接到，你看起來很痛的樣子",
+          },
           files: {
             name: "you_ko.png",
             data: "https://cowlinecdn.kiwichang.repl.co/ball/didi_ko.png",
@@ -843,6 +845,7 @@ client.on("messageCreate", (message) => {
         },
       ]
       message.reply(balllist[ballnum])
+      message.reply()
       break
   }
 })
