@@ -29,7 +29,7 @@ const chalk = require("chalk")
 const { DjsTofe: tofe } = require("@hizollo/games")
 const short = require("shortlib")
 const mcsrv = require("mcsrv")
-const cbmc = request("cbmc-js")
+const cbmc = require("cbmc-js")
 const lyricsFinder = require("lyrics-finder")
 function get_lyrics(artist, title) {
   return new Promise(async (resolve, reject) => {
