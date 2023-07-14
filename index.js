@@ -588,7 +588,7 @@ ${toSuggest}`)
       const timerTime = moment().add(
         moment.duration("PT" + timerLength.toUpperCase())
       )
-      timerDB.push({ send: slash.user.send, time: timerTime })
+      timerDB.push({ user: slash.user.id, time: timerTime })
       slash.reply({
         content: `哞！你的計時器將在<t:${timerTime.unix()}:R>後響鈴！\n(注意：機器人一旦重啟，計時器就會失效了，~~所以祈禱機器人不要重啟吧~~)`,
         ephemeral: true,
@@ -847,7 +847,7 @@ client.on("messageCreate", (message) => {
 setInterval(() => {
   timerDB.forEach((timer) => {
     if (timer.time <= moment()) {
-      timer.send("哞！時間到！")
+      client.users.cache.get(timer.user).send("哞！時間到！")
     }
   })
 })
