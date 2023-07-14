@@ -601,7 +601,7 @@ ${toSuggest}`)
       slash.deferReply()
       const postList = await cbmc.getPostList(postIndex)
       if (postList) {
-        const post = postList.posts[String(cbmcIndex)].post
+        const post = postList.posts[String(postIndex)].post
         const postEmbed = new builders.EmbedBuilder()
           .setTitle(`${post.type}${post.id.post}`)
           .setDescription(post.content)
