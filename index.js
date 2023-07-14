@@ -820,32 +820,33 @@ client.on("messageCreate", (message) => {
       const ballnum = rnum(1, 3)
       const balllist = [
         {
-          body: { content: "哞！我接到球了！" },
+          content: "哞！我接到球了！",
           files: [
             {
               name: "catch.png",
-              attachment: "https://cowlinecdn.kiwichang.repl.co/ball/cow_catch.png",
+              attachment:
+                "https://cowlinecdn.kiwichang.repl.co/ball/cow_catch.png",
             },
           ],
         },
         {
-          body: { content: "唉呦！好痛！" },
+          content: "唉呦！好痛！",
           files: [
             {
               name: "ko.png",
-              attachment: "https://cowlinecdn.kiwichang.repl.co/ball/cow_ko.png",
+              attachment:
+                "https://cowlinecdn.kiwichang.repl.co/ball/cow_ko.png",
             },
           ],
         },
         {
-          body: {
-            content:
-              "哞！我接到球了！\n我把球丟給你\n你沒接到，你看起來很痛的樣子",
-          },
+          content:
+            "哞！我接到球了！\n我把球丟給你\n你沒接到，你看起來很痛的樣子",
           files: [
             {
               name: "you_ko.png",
-              attachment: "https://cowlinecdn.kiwichang.repl.co/ball/didi_ko.png",
+              attachment:
+                "https://cowlinecdn.kiwichang.repl.co/ball/didi_ko.png",
             },
           ],
         },
