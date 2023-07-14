@@ -851,7 +851,6 @@ client.on("messageCreate", (message) => {
         },
       ]
       message.reply(balllist[ballnum])
-      message.reply()
       break
   }
 })
