@@ -502,24 +502,26 @@ ${toSuggest}`)
     case "lyrics":
       slash.deferReply()
       try {
-          get_lyrics(
-            slash.options.getString("artist"),
-            slash.options.getString("song")
-          ).then((lyrics) => {
-            const toSend = lyrics
-              ? {
-                  files: [
-                    new Discord.MessageAttachment(
-                      Buffer.from(lyrics),
-                      "lyrics.txt"
-                    ),
-                  ],
-                }
-              : "哞！找不到歌詞！"
-            slash.editReply(toSend)
-          })
+        get_lyrics(
+          slash.options.getString("artist"),
+          slash.options.getString("song")
+        ).then((lyrics) => {
+          const toSend = lyrics
+            ? {
+                files: [
+                  new Discord.MessageAttachment(
+                    Buffer.from(lyrics),
+                    "lyrics.txt"
+                  ),
+                ],
+              }
+            : "哞！找不到歌詞！"
+          slash.editReply(toSend)
+        })
       } catch (err) {
-        slash.editReply("哞！尋找歌詞時出問題了！請將表單關掉，並且再打開一次！")
+        slash.editReply(
+          "哞！尋找歌詞時出問題了！請將表單關掉，並且再打開一次！"
+        )
       }
       break
     case "earthquake":
@@ -845,9 +847,10 @@ client.on("messageCreate", (message) => {
   }
 })
 setInterval(() => {
-  timerDB.forEach((timer) => {
+  timerDB.forEach((timer, index) => {
     if (timer.time <= moment()) {
       client.users.cache.get(timer.user).send("哞！時間到！")
+      timerDB.splice(index, 1)
     }
   })
 })
