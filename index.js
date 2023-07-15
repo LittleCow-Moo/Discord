@@ -792,7 +792,8 @@ client.on("interactionCreate", async (context) => {
 })
 client.on("interactionCreate", async (auto) => {
   if (!auto.isAutocomplete()) return
-  if (auto.command.options.getSubcommand() !== "station") return
+  const focused = auto.options.getFocused(true)
+  if (focused.name !== "station") return
   const searching = auto.options.getFocused()
   const filtered = weather_stations.filter((item) => {
     return `${item.StationName} ${item.Location}`.includes(searching)
