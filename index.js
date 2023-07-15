@@ -802,7 +802,7 @@ client.on("interactionCreate", async (auto) => {
     filtered.map((choice) => ({
       name: `${choice.StationName} ${choice.Location}`,
       value: choice.StationID,
-    }))
+    }).slice(0, 25))
   )
 })
 client.on("messageCreate", (message) => {
