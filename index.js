@@ -618,22 +618,22 @@ ${toSuggest}`)
             body = JSON.parse(body).records.location[0].weatherElement
             const weatherWeather = body.filter((item) => {
               return item.elementName === "Weather"
-            })[0].value
+            })[0].elementValue
             const weatherTemp = body.filter((item) => {
               return item.elementName === "TEMP"
-            })[0].value
+            })[0].elementValue
             const weatherHumd = body.filter((item) => {
               return item.elementName === "HUMD"
-            })[0].value
+            })[0].elementValue
             const weatherWdsd = body.filter((item) => {
               return item.elementName === "WDSD"
-            })[0].value
+            })[0].elementValue
             const weatherWdir = body.filter((item) => {
               return item.elementName === "WDIR"
-            })[0].value
+            })[0].elementValue
             const weatherPres = body.filter((item) => {
               return item.elementName === "PRES"
-            })[0].value
+            })[0].elementValue
             const weatherOverview = `${weatherWeather}天`
             const weatherDesc = `溫度：${weatherTemp}°C
 濕度：${String(parseFloat(weatherHumd) * 100)}%
