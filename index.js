@@ -798,12 +798,11 @@ client.on("interactionCreate", async (auto) => {
   const filtered = weather_stations.filter((item) => {
     return `${item.StationName} ${item.Location}`.includes(searching)
   })
-  await auto.respond(
-    filtered.map((choice) => ({
-      name: `${choice.StationName} ${choice.Location}`,
-      value: choice.StationID,
-    }).slice(0, 25))
-  )
+  const mapped = filtered.map((choice) => ({
+    name: `${choice.StationName} ${choice.Location}`,
+    value: choice.StationID,
+  }))
+  await auto.respond(mapped.slice(0, 25))
 })
 client.on("messageCreate", (message) => {
   switch (message.content) {
