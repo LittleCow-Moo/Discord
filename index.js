@@ -798,7 +798,7 @@ client.on("interactionCreate", async (auto) => {
   const filtered = weather_stations.filter((item) => {
     return `${item.StationName} ${item.Location}`.includes(searching)
   })
-  await interaction.respond(
+  await auto.respond(
     filtered.map((choice) => ({
       name: `${choice.StationName} ${choice.Location}`,
       value: choice.StationID,
