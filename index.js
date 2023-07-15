@@ -39,6 +39,13 @@ function get_lyrics(artist, title) {
 }
 const helpRow = require("./help.js")
 const jokelist = require("./jokes.js")
+let weather_stations
+require("./weather_stations.js").then((list) => {
+  weather_stations = list
+  console.log(
+    `${chalk.magenta("哞！")} ${chalk.green("成功")}取得天氣測站列表！`
+  )
+})
 const alphlist = [
   "🇦",
   "🇧",
@@ -600,6 +607,9 @@ ${toSuggest}`)
         }
       })
       break
+    case "weather":
+      slash.reply(slash.options.getString("station"))
+      break
   }
 })
 client.on("interactionCreate", async (button) => {
@@ -779,6 +789,20 @@ client.on("interactionCreate", async (context) => {
       })
       break
   }
+})
+client.on("interactionCreate", async (auto) => {
+  if (!auto.isAutocomplete()) return
+  if (auto.command.options.getSubcommand() !== "station") return
+  const searching = auto.options.getFocused()
+  const filtered = weather_stations.filter((item) => {
+    return `${item.StationName} ${item.Location}`.includes(searching)
+  })
+  await interaction.respond(
+    filtered.map((choice) => ({
+      name: `${choice.StationName} ${choice.Location}`,
+      value: choice.StationID,
+    }))
+  )
 })
 client.on("messageCreate", (message) => {
   switch (message.content) {
