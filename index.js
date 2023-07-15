@@ -615,16 +615,15 @@ ${toSuggest}`)
           )}&elementName=WDIR,WDSD,TEMP,HUMD,PRES,Weather`,
           (error, response, body) => {
             body = JSON.parse(body)
-            const weatherEmbed = new builders.EmbedBuilder()
-              .setTitle(body.Weather)
-              .setDescription(
-                `溫度：${body.TEMP}°C
+            const weatherDesc = `溫度：${body.TEMP}°C
 濕度：${String(parseFloat(body.HUMD) * 100)}%
 風速：${body.WDSD}m/s
 風向：${body.WDIR}°
 氣壓：${body.PRES}hPa
-            `
-              )
+`
+            const weatherEmbed = new builders.EmbedBuilder()
+              .setTitle(body.Weather)
+              .setDescription(weatherDesc)
               .setColor(0xff00a7)
             slash.editReply({ embeds: [weatherEmbed] })
           }
