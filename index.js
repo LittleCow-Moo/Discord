@@ -610,10 +610,12 @@ ${toSuggest}`)
       break
     case "weather":
       slash.deferReply().then(() => {
+        const station = slash.options.getString(
+          "station"
+        )
+        if (!weather_stations.filter(item=>{item.StationID==station})[0]) return slash.editReply("哞！找不到該測站！")
         request(
-          `https://opendata.cwb.gov.tw/api/v1/rest/datastore/O-A0001-001?Authorization=rdec-key-123-45678-011121314&stationId=${slash.options.getString(
-            "station"
-          )}&elementName=WDIR,WDSD,TEMP,HUMD,PRES,Weather`,
+          `https://opendata.cwb.gov.tw/api/v1/rest/datastore/O-A0001-001?Authorization=rdec-key-123-45678-011121314&stationId=${station}&elementName=WDIR,WDSD,TEMP,HUMD,PRES,Weather`,
           (error, response, body) => {
             body = JSON.parse(body).records.location[0].weatherElement
             const weatherWeather = body.filter((item) => {
