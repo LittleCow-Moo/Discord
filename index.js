@@ -634,7 +634,7 @@ ${toSuggest}`)
             const weatherPres = body.filter((item) => {
               return item.elementName === "PRES"
             })[0].elementValue
-            const weatherOverview = `${weatherWeather}天`
+            const weatherOverview = `${weatherWeather}`
             const weatherDesc = `溫度：${weatherTemp}°C
 濕度：${String(parseFloat(weatherHumd) * 100)}%
 風速：${weatherWdsd}m/s
