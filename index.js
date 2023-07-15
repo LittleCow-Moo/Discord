@@ -836,10 +836,10 @@ client.on("interactionCreate", async (auto) => {
   if (focused.name !== "station") return
   const searching = auto.options.getFocused()
   const filtered = weather_stations.filter((item) => {
-    return `${item.StationName} ${item.Location}`.includes(searching)
+    return `${item.CountyName} ${item.StationName} | ${item.Location}`.includes(searching)
   })
   const mapped = filtered.map((choice) => ({
-    name: `${choice.StationName} ${choice.Location}`,
+    name: `${choice.CountyName} ${choice.StationName} | ${choice.Location}`,
     value: choice.StationID,
   }))
   await auto.respond(mapped.slice(0, 25))
