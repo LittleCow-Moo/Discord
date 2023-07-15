@@ -615,13 +615,31 @@ ${toSuggest}`)
             "station"
           )}&elementName=WDIR,WDSD,TEMP,HUMD,PRES,Weather`,
           (error, response, body) => {
-            body = JSON.parse(body)
-            const weatherOverview = `${body.Weather}天`
-            const weatherDesc = `溫度：${body.TEMP}°C
-濕度：${String(parseFloat(body.HUMD) * 100)}%
-風速：${body.WDSD}m/s
-風向：${body.WDIR}°
-氣壓：${body.PRES}hPa
+            body = JSON.parse(body).records.location[0].weatherElement
+            const weatherWeather = body.filter((item) => {
+              return item.elementName === "Weather"
+            })[0].value
+            const weatherTemp = body.filter((item) => {
+              return item.elementName === "TEMP"
+            })[0].value
+            const weatherHumd = body.filter((item) => {
+              return item.elementName === "HUMD"
+            })[0].value
+            const weatherWdsd = body.filter((item) => {
+              return item.elementName === "WDSD"
+            })[0].value
+            const weatherWdir = body.filter((item) => {
+              return item.elementName === "WDIR"
+            })[0].value
+            const weatherPres = body.filter((item) => {
+              return item.elementName === "PRES"
+            })[0].value
+            const weatherOverview = `${weatherWeather}天`
+            const weatherDesc = `溫度：${weatherTemp}°C
+濕度：${String(parseFloat(weatherHumd) * 100)}%
+風速：${weatherWdsd}m/s
+風向：${weatherWdir}°
+氣壓：${weatherPres}hPa
 `
             const weatherEmbed = new builders.EmbedBuilder()
               .setTitle(weatherOverview)
