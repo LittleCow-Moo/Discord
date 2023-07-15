@@ -619,7 +619,7 @@ ${toSuggest}`)
               .setTitle(body.Weather)
               .setDescription(
                 `溫度：${body.TEMP}°C
-濕度：${parseFloat(body.HUMD) * 100}%
+濕度：${String(parseFloat(body.HUMD) * 100)}%
 風速：${body.WDSD}m/s
 風向：${body.WDIR}°
 氣壓：${body.PRES}hPa
