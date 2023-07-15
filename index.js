@@ -616,6 +616,7 @@ ${toSuggest}`)
           )}&elementName=WDIR,WDSD,TEMP,HUMD,PRES,Weather`,
           (error, response, body) => {
             body = JSON.parse(body)
+            const weatherOverview = `${body.Weather}天`
             const weatherDesc = `溫度：${body.TEMP}°C
 濕度：${String(parseFloat(body.HUMD) * 100)}%
 風速：${body.WDSD}m/s
@@ -623,7 +624,7 @@ ${toSuggest}`)
 氣壓：${body.PRES}hPa
 `
             const weatherEmbed = new builders.EmbedBuilder()
-              .setTitle(body.Weather)
+              .setTitle(weatherOverview)
               .setDescription(weatherDesc)
               .setColor(0xff00a7)
             slash.editReply({ embeds: [weatherEmbed] })
