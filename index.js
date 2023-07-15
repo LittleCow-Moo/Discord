@@ -610,10 +610,11 @@ ${toSuggest}`)
       break
     case "weather":
       slash.deferReply().then(() => {
-        const station = slash.options.getString(
-          "station"
-        )
-        if (!weather_stations.filter(item=>{item.StationID==station})[0]) return slash.editReply("哞！找不到該測站！")
+        const station = slash.options.getString("station")
+        const detect = weather_stations.filter((item) => {
+          return item.StationID == station
+        })
+        if (!detect[0]) return slash.editReply("哞！找不到該測站！")
         request(
           `https://opendata.cwb.gov.tw/api/v1/rest/datastore/O-A0001-001?Authorization=rdec-key-123-45678-011121314&stationId=${station}&elementName=WDIR,WDSD,TEMP,HUMD,PRES,Weather`,
           (error, response, body) => {
@@ -838,7 +839,9 @@ client.on("interactionCreate", async (auto) => {
   if (focused.name !== "station") return
   const searching = auto.options.getFocused()
   const filtered = weather_stations.filter((item) => {
-    return `${item.CountyName} ${item.StationName} | ${item.Location}`.includes(searching)
+    return `${item.CountyName} ${item.StationName} | ${item.Location}`.includes(
+      searching
+    )
   })
   const mapped = filtered.map((choice) => ({
     name: `${choice.CountyName} ${choice.StationName} | ${choice.Location}`,
