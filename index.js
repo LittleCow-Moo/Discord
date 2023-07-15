@@ -608,7 +608,28 @@ ${toSuggest}`)
       })
       break
     case "weather":
-      slash.reply(slash.options.getString("station"))
+      slash.deferReply().then(() => {
+        request(
+          `https://opendata.cwb.gov.tw/api/v1/rest/datastore/O-A0001-001?Authorization=rdec-key-123-45678-011121314&stationId=${slash.options.getString(
+            "station"
+          )}&elementName=WDIR,WDSD,TEMP,HUMD,PRES,Weather`,
+          (error, response, body) => {
+            body = JSON.parse(body)
+            const weatherEmbed = new builders.EmbedBuilder()
+              .setTitle(body.Weather)
+              .setDescription(
+                `溫度：${body.TEMP}°C
+濕度：${parseFloat(body.HUMD) * 100}%
+風速：${body.WDSD}m/s
+風向：${body.WDIR}°
+氣壓：${body.PRES}hPa
+            `
+              )
+              .setColor(0xff00a7)
+            slash.editReply({ embeds: [weatherEmbed] })
+          }
+        )
+      })
       break
   }
 })
