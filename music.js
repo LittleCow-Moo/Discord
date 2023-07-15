@@ -12,7 +12,7 @@ const client = new Discord.Client({
   intents: ["Guilds", "GuildVoiceStates"],
 })
 client.login(process.env.Token)
-if (process.env.DebugMode) {
+if (!process.env.DebugMode) {
   process.on("uncaughtException", (err) => {
     console.log(
       `${chalk.magenta("哞！")} ${chalk.green("音樂系統")}發生了${chalk.red(
