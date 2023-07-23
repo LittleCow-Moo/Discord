@@ -10,4 +10,4 @@
 
 ## TODO
 
-https://github.com/LittleCow-moo/Discord/pull/5
+https://github.com/LittleCow-moo/Discord/pull/6
