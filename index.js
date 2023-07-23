@@ -431,7 +431,7 @@ ${toSuggest}`)
       const tofeGame = new tofe({
         source: slash,
         players: [slash.user],
-        strings: require("./translates/zh-tw/2048.json"),
+        strings: require("./translates/zh_TW/2048.json"),
       })
       await tofeGame.initialize()
       await tofeGame.start()
