@@ -14,7 +14,7 @@ const client = new Discord.Client({
 })
 client.login(process.env.Token)
 process.on("uncaughtException", (e) => {
-  if (process.env.DebugMode) throw e
+  if (process.env.DebugMode=="true") throw e
   console.log(
     `${chalk.magenta("哞！")} ${chalk.green("音樂系統")}發生了${chalk.red(
       "錯誤"
