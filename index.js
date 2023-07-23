@@ -102,15 +102,14 @@ const rnum = (a, b) => {
   }
   return Math.floor(Math.random() * (b - a + 1) + a)
 }
-if (!process.env.DebugMode) {
-  process.on("uncaughtException", (e) => {
-    console.log(
-      `${chalk.magenta("哞！")} ${chalk.green("指令系統")}發生了${chalk.red(
-        "錯誤"
-      )}！\n${e}`
-    )
-  })
-}
+process.on("uncaughtException", (e) => {
+  if (process.env.DebugMode) throw e
+  console.log(
+    `${chalk.magenta("哞！")} ${chalk.green("指令系統")}發生了${chalk.red(
+      "錯誤"
+    )}！\n${e}`
+  )
+})
 const generateToggleButtonRow = (id) => {
   const toggleButtonLeft = new builders.ButtonBuilder()
     .setCustomId(`toggleButtonLeft-${id}`)
