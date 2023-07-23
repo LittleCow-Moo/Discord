@@ -1,7 +1,7 @@
 {
   "name": "littlecow",
   "description": "哞！我是一個多功能的Discord機器人！",
-  "version": "0.3.8",
+  "version": "0.3.9",
   "scripts": {
     "start": "node ."
   },
