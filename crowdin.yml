@@ -1,0 +1,3 @@
+files:
+  - source: /translates/zh-tw/*.json
+    translation: /translates/%two_letters_code%/%original_file_name%
