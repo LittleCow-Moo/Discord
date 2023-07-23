@@ -1,6 +1,6 @@
 //#region 初始化
 require("dotenv").config()
-if (process.env.EggactylCompatibleMode) {
+if (process.env.EggactylCompatibleMode=="true") {
   process.stdout.write("\x1Bc")
   const myRL = require("serverline")
   myRL.init()
@@ -103,7 +103,7 @@ const rnum = (a, b) => {
   return Math.floor(Math.random() * (b - a + 1) + a)
 }
 process.on("uncaughtException", (e) => {
-  if (process.env.DebugMode) throw e
+  if (process.env.DebugMode=="true") throw e
   console.log(
     `${chalk.magenta("哞！")} ${chalk.green("指令系統")}發生了${chalk.red(
       "錯誤"
