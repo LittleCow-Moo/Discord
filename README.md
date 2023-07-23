@@ -7,7 +7,3 @@
 ## 如何運行
 
 首先，把`example.env`的內容填好，並且改名為`.env`，接著安裝好所需套件就能正常運行了
-
-## TODO
-
-https://github.com/LittleCow-moo/Discord/pull/6
