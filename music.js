@@ -5,6 +5,7 @@ const {
   createAudioResource,
   joinVoiceChannel,
   NoSubscriberBehavior,
+  getVoiceConnection,
 } = require("@discordjs/voice")
 const play = require("play-dl")
 const chalk = require("chalk")
