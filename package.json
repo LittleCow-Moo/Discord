@@ -1,7 +1,7 @@
 {
   "name": "littlecow",
-  "description": "哞!我是一個多功能的Discord機器人!",
-  "version": "0.3.6",
+  "description": "哞！我是一個多功能的Discord機器人！",
+  "version": "0.3.8",
   "scripts": {
     "start": "node ."
   },
@@ -23,7 +23,6 @@
     "os-utils": "latest",
     "discord-screenshot": "latest",
     "chalk": "4.x",
-    "discord-games-beta": "latest",
     "@discordjs/voice": "latest",
     "@hizollo/games": "latest",
     "xml-js": "latest",
@@ -34,6 +33,7 @@
     "tweetnacl": "latest",
     "serverline": "latest",
     "shortlib": "latest",
-    "mcsrv": "latest"
+    "mcsrv": "latest",
+    "cbmc-js": "latest"
   }
 }
