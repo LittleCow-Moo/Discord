@@ -1,6 +1,7 @@
 //#region 初始化
+const version = "0.3.9"
 require("dotenv").config()
-if (process.env.EggactylCompatibleMode=="true") {
+if (process.env.EggactylCompatibleMode == "true") {
   process.stdout.write("\x1Bc")
   const myRL = require("serverline")
   myRL.init()
@@ -88,7 +89,7 @@ setInterval(() => {
 
 const client = new Discord.Client({
   intents: ["Guilds", "GuildMembers", "GuildMessages"],
-  ws: { properties: { $browser: "Discord Android" } },
+  ws: { properties: { $browser: "Discord iOS" } },
   allowedMentions: { parse: [] },
 })
 client.login(process.env.Token)
@@ -103,7 +104,7 @@ const rnum = (a, b) => {
   return Math.floor(Math.random() * (b - a + 1) + a)
 }
 process.on("uncaughtException", (e) => {
-  if (process.env.DebugMode=="true") throw e
+  if (process.env.DebugMode == "true") throw e
   console.log(
     `${chalk.magenta("哞！")} ${chalk.green("指令系統")}發生了${chalk.red(
       "錯誤"
@@ -165,8 +166,9 @@ const LyricThingys = {
 //#endregion
 
 client.on("ready", async () => {
+  client.user.setActivity(`/cow | 牛牛 v${version}`, { type: 3 })
   console.clear()
-  console.log(`${chalk.magenta("牛牛")} v0.3.9`)
+  console.log(`${chalk.magenta("牛牛")} v${version}`)
   console.log(
     chalk.magenta(`
     █   █ ▀█▀ ▀█▀ █   █▀▀   █▀▀ █▀█ █ █ █
@@ -306,7 +308,7 @@ ${toSuggest}`)
       })
       break
     case "botinfo":
-      const rendermsg = ["牛牛 v0.3.9"]
+      const rendermsg = [`牛牛 v${version}`]
       rendermsg.push(`伺服器數量： \`${client.guilds.cache.size}\``)
       rendermsg.push(`CPU型號： \`${so.cpus()[0].model}\``)
       rendermsg.push(`CPU使用量： \`${cpu.toString().slice(0, 4)}%\``)
