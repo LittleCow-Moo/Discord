@@ -166,7 +166,7 @@ const LyricThingys = {
 
 client.on("ready", async () => {
   console.clear()
-  console.log(`${chalk.magenta("牛牛")} v0.3.8`)
+  console.log(`${chalk.magenta("牛牛")} v0.3.9`)
   console.log(
     chalk.magenta(`
     █   █ ▀█▀ ▀█▀ █   █▀▀   █▀▀ █▀█ █ █ █
@@ -306,7 +306,7 @@ ${toSuggest}`)
       })
       break
     case "botinfo":
-      const rendermsg = ["牛牛 v0.3.8"]
+      const rendermsg = ["牛牛 v0.3.9"]
       rendermsg.push(`伺服器數量： \`${client.guilds.cache.size}\``)
       rendermsg.push(`CPU型號： \`${so.cpus()[0].model}\``)
       rendermsg.push(`CPU使用量： \`${cpu.toString().slice(0, 4)}%\``)
