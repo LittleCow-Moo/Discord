@@ -170,7 +170,7 @@ client.on("ready", async () => {
       {
         name: `/cow | 牛牛 v${version}`,
         type: 1,
-        url: process.env.YouTubeURL,
+        url: process.env.StreamURL,
       },
     ],
   })
