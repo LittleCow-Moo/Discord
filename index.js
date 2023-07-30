@@ -89,7 +89,6 @@ setInterval(() => {
 
 const client = new Discord.Client({
   intents: ["Guilds", "GuildMembers", "GuildMessages"],
-  ws: { properties: { browser: "Discord iOS" } },
   allowedMentions: { parse: [] },
 })
 client.login(process.env.Token)
@@ -166,9 +165,14 @@ const LyricThingys = {
 //#endregion
 
 client.on("ready", async () => {
-  client.user.setActivity(`/cow | 牛牛 v${version}`, {
-    type: 3,
-    browser: "DISCORD IOS",
+  client.user.setPresence({
+    activities: [
+      {
+        name: `/cow | 牛牛 v${version}`,
+        type: 1,
+        url: process.env.YouTubeURL,
+      },
+    ],
   })
   console.clear()
   console.log(`${chalk.magenta("牛牛")} v${version}`)
