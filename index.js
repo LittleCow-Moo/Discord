@@ -89,7 +89,7 @@ setInterval(() => {
 
 const client = new Discord.Client({
   intents: ["Guilds", "GuildMembers", "GuildMessages"],
-  ws: { properties: { $browser: "Discord iOS" } },
+  ws: { properties: { browser: "Discord iOS" } },
   allowedMentions: { parse: [] },
 })
 client.login(process.env.Token)
