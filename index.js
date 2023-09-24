@@ -193,7 +193,7 @@ client.on("ready", async () => {
   if (process.env.UptimeKumaEnabled == "true") {
     const reportPing = () => {
       request(
-        `${process.env.UptimeKumaURL}?status=up&msg=牛牛%20v${version}&ping=${client.ws.ping}`
+        encodeURI(`${process.env.UptimeKumaURL}?status=up&msg=牛牛 v${version}&ping=${client.ws.ping}`)
       )
     }
     reportPing()
