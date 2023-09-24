@@ -190,6 +190,15 @@ client.on("ready", async () => {
     } 的身份登入！`
   )
   require("./music")
+  if (process.env.UptimeKumaEnabled == "true") {
+    const reportPing = () => {
+      request(
+        `${process.env.UptimeKumaURL}?status=up&msg=牛牛 v${version}&ping=${client.ws.ping}`
+      )
+    }
+    reportPing()
+    setInterval(reportPing, 20000)
+  }
 })
 
 client.on("interactionCreate", async (slash) => {
