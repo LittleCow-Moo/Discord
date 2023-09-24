@@ -115,6 +115,7 @@ const playSong = async (guildId, song) => {
   }
 
   player.addListener("stateChange", eventChangeHandler)
+  return searched.name
 }
 
 client.on("interactionCreate", async (slash) => {
@@ -147,10 +148,10 @@ client.on("interactionCreate", async (slash) => {
 
       try {
         const song = queues[slash.guild.id][0]
-        await playSong(slash.guild.id, song)
+        const songName = await playSong(slash.guild.id, song)
 
         slash.editReply(
-          `▶️ 哞！正在播放： \`${song}\`\n<:stage_g:986711131475292240> 如果你在舞台頻道內播放音樂，請管理員邀請我成為發言者！`
+          `▶️ 哞！正在播放： \`${songName}\`\n<:stage_g:986711131475292240> 如果你在舞台頻道內播放音樂，請管理員邀請我成為發言者！`
         )
       } catch (error) {
         console.error(`播放歌曲時發生錯誤： ${error}`)
@@ -160,13 +161,7 @@ client.on("interactionCreate", async (slash) => {
     const EventChangeHandler = async (oldOne, newOne) => {
       if (newOne.status == "idle") {
         queues[slash.guild.id].splice(0, 1)
-        if (queues[slash.guild.id][0]) {
-          slash.channel.send(
-            `✅ 哞！已播放完畢\n⏯️ 下一首： \`${
-              queues[slash.guild.id][0].name
-            }\``
-          )
-        } else {
+        if (!queues[slash.guild.id][0]) {
           slash.channel.send(`✅ 哞！已播放完畢\n⏸️ 待播清單是空的！`)
         }
         if (!queues[slash.guild.id][0]) return
@@ -188,6 +183,11 @@ client.on("interactionCreate", async (slash) => {
         players[slash.guild.id] = player
         getVoiceConnection(slash.guild.id).subscribe(player)
         players[slash.guild.id].addListener("stateChange", EventChangeHandler)
+        slash.channel.send(
+          `✅ 哞！已播放完畢\n⏯️ 下一首： \`${
+            so_info.name
+          }\``
+        )
       }
     }
     players[slash.guild.id].addListener("stateChange", EventChangeHandler)
