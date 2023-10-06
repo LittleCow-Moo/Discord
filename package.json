@@ -35,6 +35,7 @@
     "shortlib": "latest",
     "tweetnacl": "latest",
     "uuid": "latest",
-    "xml-js": "latest"
+    "xml-js": "latest",
+    "qrcode":"latest"
   }
 }
