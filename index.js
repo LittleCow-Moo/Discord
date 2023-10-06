@@ -694,7 +694,7 @@ ${toSuggest}`)
             files: [
               {
                 name: "qr.png",
-                attachment: url,
+                attachment: new Buffer.from(url),
               },
             ],
           })
