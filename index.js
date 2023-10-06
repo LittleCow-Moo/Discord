@@ -541,7 +541,7 @@ ${toSuggest}`)
       slash.deferReply().then(() => {
         //反正這不是我的API Key 不放.env沒差啦.w.
         request(
-          `https://opendata.cwb.gov.tw/api/v1/rest/datastore/E-A0015-001?Authorization=rdec-key-123-45678-011121314&limit=1&format=JSON&offset=${
+          `https://opendata.cwa.gov.tw/api/v1/rest/datastore/E-A0015-001?Authorization=rdec-key-123-45678-011121314&limit=1&format=JSON&offset=${
             eqIndex - 1
           }`,
           (error, response, body) => {
@@ -633,7 +633,7 @@ ${toSuggest}`)
         })
         if (!detect[0]) return slash.editReply("哞！找不到該測站！")
         request(
-          `https://opendata.cwb.gov.tw/api/v1/rest/datastore/O-A0001-001?Authorization=rdec-key-123-45678-011121314&stationId=${station}&elementName=WDIR,WDSD,TEMP,HUMD,PRES,Weather`,
+          `https://opendata.cwa.gov.tw/api/v1/rest/datastore/O-A0001-001?Authorization=rdec-key-123-45678-011121314&stationId=${station}&elementName=WDIR,WDSD,TEMP,HUMD,PRES,Weather`,
           (error, response, body) => {
             body = JSON.parse(body).records.location[0].weatherElement
             const weatherWeather = body.filter((item) => {
