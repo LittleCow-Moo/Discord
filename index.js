@@ -31,6 +31,7 @@ const { DjsTofe: tofe } = require("@hizollo/games")
 const short = require("shortlib")
 const mcsrv = require("mcsrv")
 const cbmc = require("cbmc-js")
+const qr = require("qrcode")
 const lyricsFinder = require("lyrics-finder")
 function get_lyrics(artist, title) {
   return new Promise(async (resolve, reject) => {
@@ -193,7 +194,9 @@ client.on("ready", async () => {
   if (process.env.UptimeKumaEnabled == "true") {
     const reportPing = () => {
       request(
-        encodeURI(`${process.env.UptimeKumaURL}?status=up&msg=牛牛 v${version}&ping=${client.ws.ping}`)
+        encodeURI(
+          `${process.env.UptimeKumaURL}?status=up&msg=牛牛 v${version}&ping=${client.ws.ping}`
+        )
       )
     }
     reportPing()
@@ -669,6 +672,34 @@ ${toSuggest}`)
           }
         )
       })
+      break
+    case "qrcode":
+      await slash.deferReply()
+      const qrData = slash.options.getString("data")
+      const qrColorDark = slash.options.getString("codecolor")
+      const qrColorLight = slash.options.getString("bgcolor")
+      qr.toDataURL(
+        qrData,
+        {
+          color: {
+            dark: qrColorDark | "#000000",
+            light: qrColorLight | "#ffffff",
+          },
+          width: 512,
+        },
+        (err, url) => {
+          if (err) return slash.editReply(`\`\`\`js${err}\`\`\``)
+          slash.editReply({
+            content: "哞！這是你的QR Code：",
+            files: [
+              {
+                name: "qr.png",
+                attachment: url,
+              },
+            ],
+          })
+        }
+      )
       break
   }
 })
