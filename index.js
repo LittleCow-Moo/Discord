@@ -682,8 +682,8 @@ ${toSuggest}`)
         qrData,
         {
           color: {
-            dark: qrColorDark | "#000000",
-            light: qrColorLight | "#ffffff",
+            dark: qrColorDark || "#000000",
+            light: qrColorLight || "#ffffff",
           },
           width: 512,
         },
