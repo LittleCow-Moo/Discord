@@ -933,7 +933,7 @@ client.on("messageCreate", (message) => {
             {
               name: "catch.png",
               attachment:
-                "https://cowlinecdn.kiwichang.repl.co/ball/cow_catch.png",
+                "https://cowcdn.pages.dev/ball/cow_catch.png",
             },
           ],
         },
@@ -943,7 +943,7 @@ client.on("messageCreate", (message) => {
             {
               name: "ko.png",
               attachment:
-                "https://cowlinecdn.kiwichang.repl.co/ball/cow_ko.png",
+                "https://cowcdn.pages.dev/ball/cow_ko.png",
             },
           ],
         },
@@ -954,7 +954,7 @@ client.on("messageCreate", (message) => {
             {
               name: "you_ko.png",
               attachment:
-                "https://cowlinecdn.kiwichang.repl.co/ball/didi_ko.png",
+                "https://cowcdn.pages.dev/ball/didi_ko.png",
             },
           ],
         },
