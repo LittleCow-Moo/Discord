@@ -169,9 +169,9 @@ client.on("ready", async () => {
   client.user.setPresence({
     activities: [
       {
-        name: `/cow | 牛牛 v${version}`,
-        type: 1,
-        url: process.env.StreamURL,
+        name: "牛牛",
+        type: 4,
+        state: `🐮 /cow | 牛牛 v${version}`
       },
     ],
   })
