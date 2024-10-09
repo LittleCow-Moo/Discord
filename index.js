@@ -1,6 +1,7 @@
 //#region 初始化
+const version = "0.3.9"
 require("dotenv").config()
-if (process.env.EggactylCompatibleMode=="true") {
+if (process.env.EggactylCompatibleMode == "true") {
   process.stdout.write("\x1Bc")
   const myRL = require("serverline")
   myRL.init()
@@ -30,7 +31,9 @@ const { DjsTofe: tofe } = require("@hizollo/games")
 const short = require("shortlib")
 const mcsrv = require("mcsrv")
 const cbmc = require("cbmc-js")
+const qr = require("qrcode")
 const lyricsFinder = require("lyrics-finder")
+const translate = require("google-translate-api-x")
 function get_lyrics(artist, title) {
   return new Promise(async (resolve, reject) => {
     let lyrics = (await lyricsFinder(artist, title)) || "哞！找不到歌詞！"
@@ -88,7 +91,6 @@ setInterval(() => {
 
 const client = new Discord.Client({
   intents: ["Guilds", "GuildMembers", "GuildMessages"],
-  ws: { properties: { $browser: "Discord Android" } },
   allowedMentions: { parse: [] },
 })
 client.login(process.env.Token)
@@ -103,7 +105,7 @@ const rnum = (a, b) => {
   return Math.floor(Math.random() * (b - a + 1) + a)
 }
 process.on("uncaughtException", (e) => {
-  if (process.env.DebugMode=="true") throw e
+  if (process.env.DebugMode == "true") throw e
   console.log(
     `${chalk.magenta("哞！")} ${chalk.green("指令系統")}發生了${chalk.red(
       "錯誤"
@@ -165,8 +167,17 @@ const LyricThingys = {
 //#endregion
 
 client.on("ready", async () => {
+  client.user.setPresence({
+    activities: [
+      {
+        name: "牛牛",
+        type: 4,
+        state: `🐮 /cow | 牛牛 v${version}`,
+      },
+    ],
+  })
   console.clear()
-  console.log(`${chalk.magenta("牛牛")} v0.3.8`)
+  console.log(`${chalk.magenta("牛牛")} v${version}`)
   console.log(
     chalk.magenta(`
     █   █ ▀█▀ ▀█▀ █   █▀▀   █▀▀ █▀█ █ █ █
@@ -181,6 +192,17 @@ client.on("ready", async () => {
     } 的身份登入！`
   )
   require("./music")
+  if (process.env.UptimeKumaEnabled == "true") {
+    const reportPing = () => {
+      request(
+        encodeURI(
+          `${process.env.UptimeKumaURL}?status=up&msg=牛牛 v${version}&ping=${client.ws.ping}`
+        )
+      )
+    }
+    reportPing()
+    setInterval(reportPing, 20000)
+  }
 })
 
 client.on("interactionCreate", async (slash) => {
@@ -306,7 +328,7 @@ ${toSuggest}`)
       })
       break
     case "botinfo":
-      const rendermsg = ["牛牛 v0.3.8"]
+      const rendermsg = [`牛牛 v${version}`]
       rendermsg.push(`伺服器數量： \`${client.guilds.cache.size}\``)
       rendermsg.push(`CPU型號： \`${so.cpus()[0].model}\``)
       rendermsg.push(`CPU使用量： \`${cpu.toString().slice(0, 4)}%\``)
@@ -523,7 +545,7 @@ ${toSuggest}`)
       slash.deferReply().then(() => {
         //反正這不是我的API Key 不放.env沒差啦.w.
         request(
-          `https://opendata.cwb.gov.tw/api/v1/rest/datastore/E-A0015-001?Authorization=rdec-key-123-45678-011121314&limit=1&format=JSON&offset=${
+          `https://opendata.cwa.gov.tw/api/v1/rest/datastore/E-A0015-001?Authorization=rdec-key-123-45678-011121314&limit=1&format=JSON&offset=${
             eqIndex - 1
           }`,
           (error, response, body) => {
@@ -615,7 +637,7 @@ ${toSuggest}`)
         })
         if (!detect[0]) return slash.editReply("哞！找不到該測站！")
         request(
-          `https://opendata.cwb.gov.tw/api/v1/rest/datastore/O-A0001-001?Authorization=rdec-key-123-45678-011121314&stationId=${station}&elementName=WDIR,WDSD,TEMP,HUMD,PRES,Weather`,
+          `https://opendata.cwa.gov.tw/api/v1/rest/datastore/O-A0001-001?Authorization=rdec-key-123-45678-011121314&stationId=${station}&elementName=WDIR,WDSD,TEMP,HUMD,PRES,Weather`,
           (error, response, body) => {
             body = JSON.parse(body).records.location[0].weatherElement
             const weatherWeather = body.filter((item) => {
@@ -650,6 +672,45 @@ ${toSuggest}`)
             slash.editReply({ embeds: [weatherEmbed] })
           }
         )
+      })
+      break
+    case "qrcode":
+      await slash.deferReply()
+      const qrData = slash.options.getString("data")
+      const qrColorDark = slash.options.getString("codecolor")
+      const qrColorLight = slash.options.getString("bgcolor")
+      qr.toDataURL(
+        qrData,
+        {
+          color: {
+            dark: qrColorDark || "#000000",
+            light: qrColorLight || "#ffffff",
+          },
+          width: 512,
+        },
+        (err, url) => {
+          if (err) return slash.editReply(`\`\`\`js${err}\`\`\``)
+          slash.editReply({
+            content: "哞！這是你的QR Code：",
+            files: [
+              {
+                name: "qr.png",
+                attachment: new Buffer.from(url.split(",")[1], "base64"),
+              },
+            ],
+          })
+        }
+      )
+      break
+    case "translate":
+      await slash.deferReply()
+      const toTranslate = slash.options.getString("text")
+      const res = await translate([toTranslate], {
+        to: slash.locale,
+        client: "gtx",
+      })
+      await slash.editReply({
+        content: `哞！翻譯結果：\`${res[0].text}\``,
       })
       break
   }
@@ -883,8 +944,7 @@ client.on("messageCreate", (message) => {
           files: [
             {
               name: "catch.png",
-              attachment:
-                "https://cowlinecdn.kiwichang.repl.co/ball/cow_catch.png",
+              attachment: "https://cowcdn.pages.dev/ball/cow_catch.png",
             },
           ],
         },
@@ -893,8 +953,7 @@ client.on("messageCreate", (message) => {
           files: [
             {
               name: "ko.png",
-              attachment:
-                "https://cowlinecdn.kiwichang.repl.co/ball/cow_ko.png",
+              attachment: "https://cowcdn.pages.dev/ball/cow_ko.png",
             },
           ],
         },
@@ -904,8 +963,7 @@ client.on("messageCreate", (message) => {
           files: [
             {
               name: "you_ko.png",
-              attachment:
-                "https://cowlinecdn.kiwichang.repl.co/ball/didi_ko.png",
+              attachment: "https://cowcdn.pages.dev/ball/didi_ko.png",
             },
           ],
         },
