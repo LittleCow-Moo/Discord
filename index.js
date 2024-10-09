@@ -33,6 +33,7 @@ const mcsrv = require("mcsrv")
 const cbmc = require("cbmc-js")
 const qr = require("qrcode")
 const lyricsFinder = require("lyrics-finder")
+const translate = require("google-translate-api-x")
 function get_lyrics(artist, title) {
   return new Promise(async (resolve, reject) => {
     let lyrics = (await lyricsFinder(artist, title)) || "哞！找不到歌詞！"
@@ -171,7 +172,7 @@ client.on("ready", async () => {
       {
         name: "牛牛",
         type: 4,
-        state: `🐮 /cow | 牛牛 v${version}`
+        state: `🐮 /cow | 牛牛 v${version}`,
       },
     ],
   })
@@ -701,6 +702,17 @@ ${toSuggest}`)
         }
       )
       break
+    case "translate":
+      await slash.deferReply()
+      const toTranslate = slash.options.getString("text")
+      const res = await translate([toTranslate], {
+        to: slash.locale,
+        client: "gtx",
+      })
+      await slash.editReply({
+        content: `哞！翻譯結果：\`${res.text}\``,
+      })
+      break
   }
 })
 client.on("interactionCreate", async (button) => {
@@ -932,8 +944,7 @@ client.on("messageCreate", (message) => {
           files: [
             {
               name: "catch.png",
-              attachment:
-                "https://cowcdn.pages.dev/ball/cow_catch.png",
+              attachment: "https://cowcdn.pages.dev/ball/cow_catch.png",
             },
           ],
         },
@@ -942,8 +953,7 @@ client.on("messageCreate", (message) => {
           files: [
             {
               name: "ko.png",
-              attachment:
-                "https://cowcdn.pages.dev/ball/cow_ko.png",
+              attachment: "https://cowcdn.pages.dev/ball/cow_ko.png",
             },
           ],
         },
@@ -953,8 +963,7 @@ client.on("messageCreate", (message) => {
           files: [
             {
               name: "you_ko.png",
-              attachment:
-                "https://cowcdn.pages.dev/ball/didi_ko.png",
+              attachment: "https://cowcdn.pages.dev/ball/didi_ko.png",
             },
           ],
         },
