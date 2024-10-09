@@ -710,7 +710,7 @@ ${toSuggest}`)
         client: "gtx",
       })
       await slash.editReply({
-        content: `哞！翻譯結果：\`${res.text}\``,
+        content: `哞！翻譯結果：\`${res[0].text}\``,
       })
       break
   }
