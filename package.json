@@ -15,14 +15,14 @@
   },
   "dependencies": {
     "@discordjs/builders": "latest",
-    "@discordjs/opus": "^0.9.0",
-    "@discordjs/voice": "latest",
+    "@discordjs/opus": "^0.10.0",
+    "@discordjs/voice": "^0.19.2",
     "@hizollo/games": "latest",
     "cbmc-js": "latest",
     "chalk": "4.x",
     "discord-player": "^6.6.2",
     "discord-screenshot": "latest",
-    "discord.js": "14.x",
+    "discord.js": "^14.27.0",
     "dotenv": "latest",
     "google-translate-api-x": "^10.7.1",
     "koa": "latest",
@@ -30,13 +30,13 @@
     "mcsrv": "latest",
     "moment": "latest",
     "os-utils": "latest",
-    "play-dl": "latest",
     "qrcode": "latest",
     "request": "latest",
     "serverline": "latest",
     "shortlib": "latest",
     "tweetnacl": "latest",
     "uuid": "latest",
-    "xml-js": "latest"
+    "xml-js": "latest",
+    "@snazzah/davey": "^0.1.12"
   }
 }
